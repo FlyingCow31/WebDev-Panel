@@ -3,7 +3,8 @@ import Link from "next/link"
 import { getClients, getProjects } from "@/app/lib/data"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import NewClientModal from "@/app/components/client/NewClientModal"
-import DeleteButton from "@/app/components/client/DeleteButton"
+
+import ClientCard from "@/app/components/client/ClientCard"
 
 const documents = [
      { name: "devis.pdf", date: "09/10" },
@@ -39,15 +40,6 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
      const current = clients.find((c) => c.client_id === Number(clientId)) ?? filteredClients[0] ?? clients[0]
 
      const activeProjects = projects.filter((p) => p.client_id === current.client_id)
-
-     const fields = [
-          { label: "Contact", value: current.client_pren + " " + current.client_nom, strong: true },
-          { label: "SIRET", value: `${current.client_siret ?? "Aucun SIRET."}` },
-          { label: "E-mail", value: `${current.client_contact_mail}`, href: `mailto:${current.client_contact_mail}` },
-          { label: "Téléphone", value: `${current.client_tel}`, href: `tel:${current.client_tel}` },
-          { label: "Adresse", value: `${current.client_add}`, wide: true },
-          { label: "Notes", value: `${current.client_notes ?? "Rien!"}`, wide: true },
-     ]
 
      return (
           <div className="grid items-start gap-6 lg:gap-7 xl:grid-aside-main">
@@ -88,52 +80,21 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                </section>
 
                <div className="flex flex-col gap-6">
-                    <section aria-labelledby="h-fiche" className="card flex flex-col gap-5">
-                         <div className="flex flex-wrap items-center justify-between gap-4">
-                              <div className="flex items-center gap-4">
-                                   <div
-                                        aria-hidden="true"
-                                        className="flex size-15 flex-none items-center justify-center border-3 border-ink bg-main font-display text-2xl text-white"
-                                   >
-                                        {current.client_nom.slice(0, 1) + current.client_pren.slice(0, 1)}
-                                   </div>
-                                   <div className="flex flex-col gap-0.5">
-                                        <h2 id="h-fiche" className="section-title">
-                                             {current.client_bus}
-                                        </h2>
-                                        <span className="muted text-body-sm">
-                                             Client n°{current.client_id} · depuis le
-                                             {" " + current.client_created_at.toLocaleDateString("fr-FR")}
-                                        </span>
-                                   </div>
-                              </div>
-                              <div className="flex flex-wrap gap-2.5 items-center">
-                                   <DeleteButton client_id={current.client_id} />
-                                   <button type="button" className="btn btn-sm shadow-none">
-                                        Modifier
-                                   </button>
-                              </div>
-                         </div>
-                         <dl className="m-0 grid gap-x-7 gap-y-4 sm:grid-cols-2">
-                              {fields.map((f) => (
-                                   <div
-                                        key={f.label}
-                                        className={`flex flex-col gap-1 ${f.wide ? "sm:col-span-2" : ""}`}
-                                   >
-                                        <dt className="eyebrow muted">{f.label}</dt>
-                                        <dd className={`m-0 leading-relaxed ${f.strong ? "font-bold" : ""}`}>
-                                             {f.href ? (
-                                                  <a href={f.href} className="link font-normal">
-                                                       {f.value}
-                                                  </a>
-                                             ) : (
-                                                  f.value
-                                             )}
-                                        </dd>
-                                   </div>
-                              ))}
-                         </dl>
-                    </section>
+                    <ClientCard
+                         key={current.client_id}
+                         client={{
+                              client_id: current.client_id,
+                              client_nom: current.client_nom,
+                              client_pren: current.client_pren,
+                              client_bus: current.client_bus ?? "",
+                              client_siret: current.client_siret ? String(current.client_siret) : "",
+                              client_tel: current.client_tel ? String(current.client_tel) : "",
+                              client_contact_mail: current.client_contact_mail ?? "",
+                              client_add: current.client_add ?? "",
+                              client_notes: current.client_notes ?? "",
+                              createdAt: current.client_created_at.toLocaleDateString("fr-FR"),
+                         }}
+                    />
 
                     <div className="grid gap-6 md:grid-cols-2">
                          <section aria-labelledby="h-cproj" className="card-sm flex flex-col gap-3">

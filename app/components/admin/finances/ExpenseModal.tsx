@@ -48,7 +48,7 @@ export default function ExpenseModal({ projects, spent, profit }: Props) {
           e.preventDefault()
           const data = Object.fromEntries(new FormData(e.currentTarget))
 
-          const res = await fetch("/api/finances/create", {
+          const res = await fetch("/api/finances/depense/create", {
                method: "POST",
                headers: { "Content-Type": "application/json" },
                body: JSON.stringify(data),
