@@ -4,6 +4,7 @@ import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getProjects, getAvancees, getClients } from "@/app/lib/data"
 import { Avancee, Client, Projet } from "@/app/lib/types"
 import DeleteButton from "@/app/components/admin/projets/DeleteButton"
+import ContinueButton from "@/app/components/admin/projets/ContinueButton"
 
 type Status = "late" | "en_cours" | "attente_client" | "planifie"
 
@@ -57,14 +58,19 @@ export async function ProjetsPageContent({ searchParams }: { searchParams: Promi
                     </summary>
                     <ul className="muted m-0 flex list-none flex-col gap-2 px-4 pb-4">
                          {finished.map((f) => (
-                              <li key={f.proj_id} className="flex gap-5">
-                                   {f.proj_type +
-                                        " " +
-                                        f.proj_nom +
-                                        " " +
-                                        "Terminé le: " +
-                                        f.proj_done_at?.toLocaleString("fr-FR")}
-                                   <DeleteButton proj_id={f.proj_id} />
+                              <li key={f.proj_id} className="flex items-center justify-between gap-5">
+                                   <span>
+                                        {f.proj_type +
+                                             " " +
+                                             f.proj_nom +
+                                             " " +
+                                             "Terminé le: " +
+                                             f.proj_done_at?.toLocaleString("fr-FR")}
+                                   </span>
+                                   <div className="flex flex-none items-center gap-2">
+                                        <ContinueButton proj_id={f.proj_id} proj_nom={f.proj_nom} />
+                                        <DeleteButton proj_id={f.proj_id} compact />
+                                   </div>
                               </li>
                          ))}
                     </ul>

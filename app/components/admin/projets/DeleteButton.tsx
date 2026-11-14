@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export default function DeleteButton({ proj_id }: { proj_id: number }) {
+export default function DeleteButton({ proj_id, compact = false }: { proj_id: number; compact?: boolean }) {
      const router = useRouter()
      const [confirm, setConfirm] = useState("X")
      const [isDeleting, setIsDeleting] = useState(false)
-     const isCompact = confirm !== "confirmer" && confirm !== "Erreur" && !isDeleting
+     const isCompact = compact || (confirm !== "confirmer" && confirm !== "Erreur" && !isDeleting)
 
      async function handleDeletion(proj_id: number) {
           setIsDeleting(true)
@@ -30,15 +30,42 @@ export default function DeleteButton({ proj_id }: { proj_id: number }) {
           }
      }
 
+     const onButtonClick = compact
+          ? () => handleDeletion(proj_id)
+          : confirm === "confirmer"
+            ? () => handleDeletion(proj_id)
+            : () => setConfirm("confirmer")
+
      return (
           <button
                type="button"
                disabled={isDeleting}
                aria-label={confirm === "confirmer" ? "Confirmer la suppression du projet" : "Supprimer le projet"}
-               className={`btn btn-sm btn-danger ${isCompact ? "btn-icon" : ""}`}
-               onClick={confirm === "confirmer" ? () => handleDeletion(proj_id) : () => setConfirm("confirmer")}
+               className={
+                    compact
+                         ? "btn btn-icon min-h-0 h-7 w-7 border-2 border-ink bg-surface p-0 text-[0.75rem] font-black text-ink shadow-none"
+                         : `btn btn-sm btn-danger ${isCompact ? "btn-icon" : ""}`
+               }
+               style={
+                    compact
+                         ? {
+                              minHeight: "1.75rem",
+                              width: "1.75rem",
+                              height: "1.75rem",
+                              padding: 0,
+                              boxShadow: "none",
+                              borderWidth: "2px",
+                              borderColor: "#111111",
+                              background: "#f3ecff",
+                              color: "#111111",
+                              fontSize: "0.75rem",
+                              fontWeight: 900,
+                           }
+                         : undefined
+               }
+               onClick={onButtonClick}
           >
-               {isDeleting ? "Suppression..." : confirm === "confirmer" ? "Confirmer ?" : confirm}
+               {isDeleting ? "Suppression..." : compact ? "X" : confirm === "confirmer" ? "Confirmer ?" : confirm}
           </button>
      )
 }

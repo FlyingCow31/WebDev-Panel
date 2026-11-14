@@ -17,7 +17,7 @@ export async function PATCH(request: NextRequest) {
 
      if (!edit[0].proj_done_at) return NextResponse.json({ error: "Server problem" }, { status: 400 })
 
-     revalidateTag("projets", "days")
-     revalidateTag(`project-n${newProj_id}`, "days")
+     revalidateTag("projets", { expire: 0 })
+     revalidateTag(`project-n${newProj_id}`, { expire: 0 })
      return NextResponse.json({ success: true })
 }
