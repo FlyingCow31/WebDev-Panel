@@ -15,8 +15,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                               Se déconnecter
                          </button>
                     </div>
-                    <Suspense fallback={<NavList />}>
-                         <NavLinks />
+                    <Suspense fallback={<NavLinks projectNb={0} todosNb={0} />}>
+                         <NavList />
                     </Suspense>
                     <hr className="my-3 hidden border-0 border-t-2 border-ink lg:block" />
                     <button type="button" className="nav-link muted hidden font-medium lg:flex">
