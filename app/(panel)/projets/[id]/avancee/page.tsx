@@ -1,7 +1,6 @@
 import AvForm from "@/app/components/projet/avancee/Form"
 import { getProject } from "@/app/lib/data"
 import { type ProjectType, STEP_TEMPLATES } from "@/app/lib/steps"
-import { Projet } from "@/app/lib/types"
 
 import { Suspense } from "react"
 

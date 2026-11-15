@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
-import NavLinks from "../components/NavLinks"
 import NavList from "../components/NavList"
+import { WaitingNavLinks } from "../components/NavLinks"
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
      return (
@@ -15,7 +15,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                               Se déconnecter
                          </button>
                     </div>
-                    <Suspense fallback={<NavLinks projectNb={0} todosNb={0} />}>
+                    <Suspense fallback={<WaitingNavLinks />}>
                          <NavList />
                     </Suspense>
                     <hr className="my-3 hidden border-0 border-t-2 border-ink lg:block" />
