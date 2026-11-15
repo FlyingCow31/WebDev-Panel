@@ -5,11 +5,19 @@ import { CheckRedirect } from "@/app/lib/auth/auth"
 import NewClientModal from "@/app/components/client/NewClientModal"
 
 import ClientCard from "@/app/components/client/ClientCard"
+import { sql } from "@/app/lib/db"
+import DownloadButton from "@/app/components/documents/DownloadButton"
+import DeleteDocument from "@/app/components/documents/DeleteDocument"
+import UploadDocumentModal from "@/app/components/documents/UploadDocumentModal"
 
-const documents = [
-     { name: "devis.pdf", date: "09/10" },
-     { name: "onboarding.pdf", date: "09/10" },
-]
+type ClientDocument = {
+     document_id: number
+     document_nom: string
+     document_type: string
+     document_visible_client: boolean
+     document_created_at: Date
+     proj_nom: string
+}
 
 export default function ClientsPage({ searchParams }: { searchParams: Promise<{ id?: string; q?: string }> }) {
      return (
@@ -40,6 +48,13 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
      const current = clients.find((c) => c.client_id === Number(clientId)) ?? filteredClients[0] ?? clients[0]
 
      const activeProjects = projects.filter((p) => p.client_id === current.client_id)
+
+     const documents = (await sql`
+          SELECT d.document_id, d.document_nom, d.document_type, d.document_visible_client, d.document_created_at, p.proj_nom
+          FROM document d
+          JOIN projet p ON p.proj_id = d.proj_id
+          WHERE p.client_id = ${current.client_id}
+          ORDER BY d.document_created_at DESC`) as ClientDocument[]
 
      return (
           <div className="grid items-start gap-6 lg:gap-7 xl:grid-aside-main">
@@ -114,21 +129,27 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                                    )
                               })}
                          </section>
-                         {/* //TODO add document block */}
                          <section aria-labelledby="h-cdocs" className="card-sm flex flex-col gap-3">
                               <h3 id="h-cdocs" className="card-title">
                                    Documents partagés
                               </h3>
+                              {documents.length === 0 && <p className="muted m-0 text-body-sm">Aucun document.</p>}
                               {documents.map((d) => (
-                                   <div key={d.name} className="flex justify-between text-body-sm">
-                                        <span>{d.name}</span>
-                                        <span className="muted">{d.date}</span>
+                                   <div key={d.document_id} className="flex items-center gap-3 text-body-sm">
+                                        <div className="flex min-w-0 flex-1 flex-col">
+                                             <span className="truncate font-bold">{d.document_nom}</span>
+                                             <span className="muted text-caption">
+                                                  {d.proj_nom} · {d.document_created_at.toLocaleDateString("fr-FR")}
+                                                  {!d.document_visible_client && " · masqué"}
+                                             </span>
+                                        </div>
+                                        <DownloadButton documentId={d.document_id} fileName={d.document_nom} />
+                                        <DeleteDocument documentId={d.document_id} />
                                    </div>
                               ))}
-                              {/* // TODO: add the add document logic */}
-                              <button type="button" className="btn btn-sm btn-dashed">
-                                   + Déposer un document
-                              </button>
+                              <UploadDocumentModal
+                                   projects={activeProjects.map((p) => ({ proj_id: p.proj_id, label: p.proj_nom }))}
+                              />
                          </section>
                     </div>
                </div>

@@ -4,6 +4,7 @@ import { stepLabel, stepNumber } from "@/app/lib/steps"
 import { Avancee, ProjectProps } from "@/app/lib/types"
 import React from "react"
 import { sortAvancees } from "../admin/project"
+import DownloadButton from "@/app/components/documents/DownloadButton"
 
 // Sort by their date attribute (user's input in admin panel)
 
@@ -134,7 +135,7 @@ export function DocumentSection({ documents }: ProjectProps) {
      return (
           <ul className="m-0 flex list-none flex-col gap-3 p-0">
                {documents?.map((doc) => (
-                    <li key={doc.document_nom} className="item flex items-center gap-3.5">
+                    <li key={doc.document_id} className="item flex items-center gap-3.5">
                          <span
                               className={`pill eyebrow flex-none ${doc.document_type === "onboarding" ? "bg-main" : doc.document_type === "devis" ? "bg-sec" : "bg-bg"}`}
                          >
@@ -143,30 +144,10 @@ export function DocumentSection({ documents }: ProjectProps) {
                          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                               <span className="truncate font-bold">{doc.document_nom}</span>
                               <span className="muted text-sm">
-                                   {doc.document_created_at.toLocaleDateString("fr-FR").toString()} · PDF
+                                   {doc.document_created_at.toLocaleDateString("fr-FR")}
                               </span>
                          </div>
-                         <a
-                              href="#"
-                              aria-label={`Télécharger ${doc.document_nom}`}
-                              className="btn btn-icon btn-primary btn-sm flex-none shadow-none"
-                         >
-                              <svg
-                                   width="20"
-                                   height="20"
-                                   viewBox="0 0 24 24"
-                                   fill="none"
-                                   stroke="currentColor"
-                                   strokeWidth="2.4"
-                                   strokeLinecap="round"
-                                   strokeLinejoin="round"
-                                   aria-hidden="true"
-                              >
-                                   <path d="M12 4v12" />
-                                   <path d="M6 10l6 6 6-6" />
-                                   <path d="M4 20h16" />
-                              </svg>
-                         </a>
+                         <DownloadButton documentId={doc.document_id} fileName={doc.document_nom} />
                     </li>
                ))}
           </ul>

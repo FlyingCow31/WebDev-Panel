@@ -18,3 +18,4 @@ export async function DELETE(request: NextRequest) {
 
      return NextResponse.json({ success: true })
 }
+// TODO: Add a file deletion in Blob, otherwise the file will stay alone... poor file...
