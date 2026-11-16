@@ -15,7 +15,7 @@
 Panel de gestion interne pour toute entreprise (plutôt axé micro-entreprise) de professions libérales, avec un espace client pour suivre l'avancée des projets. Style néo-brutaliste, lié à mon style graphique de prédilection.
 
 > [!NOTE]
-> **Compte de démonstration** · utilisateur : `Test` · mot de passe : `Test123@`
+> **Compte de démonstration** · utilisateur : `test@test.fr` · mot de passe : `Test123@`
 
 ---
 
