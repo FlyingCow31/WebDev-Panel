@@ -24,6 +24,8 @@ export type Avancee = {
      avancee_message?: string
      avancee_date: Date
      avancee_visible_client: boolean
+     document_id?: number | null
+     document_nom?: string | null
 }
 
 export type Document = {

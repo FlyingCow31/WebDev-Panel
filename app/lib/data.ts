@@ -121,7 +121,11 @@ export async function getAvancee(proj_id: number): Promise<Avancee[]> {
      "use cache"
      cacheLife("days")
      cacheTag(`avancee-n${proj_id}`)
-     const avancees = await sql`SELECT * FROM avancee WHERE proj_id = ${proj_id}`
+     const avancees = await sql`
+          SELECT a.*, d.document_nom
+          FROM avancee a
+          LEFT JOIN document d ON d.document_id = a.document_id
+          WHERE a.proj_id = ${proj_id}`
 
      return avancees as Avancee[]
 }

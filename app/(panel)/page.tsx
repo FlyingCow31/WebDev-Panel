@@ -6,11 +6,11 @@ import { Avancee, Projet, NextSummary } from "../lib/types"
 import { formatTitle, TranslateAI } from "./projets/page"
 import { createDeadlines } from "./administration/page"
 import DashboardTodos from "../components/todo/DashboardTodos"
+import { DashboardSkeleton } from "../components/LoadingSkeletons"
 
 export default function HomePage() {
-     // TODO : Integrate a loading skeletton
      return (
-          <Suspense fallback={<p className="p-6">Chargement…</p>}>
+          <Suspense fallback={<DashboardSkeleton />}>
                <HomePageContent />
           </Suspense>
      )

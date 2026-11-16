@@ -1,7 +1,7 @@
 export function GeneratePassword() {
      let result = ""
-     // TODO: Put this in .env
-     const characters = "A1BC7DEFGHI3JK2LMNOPQRSTU4VWXYZabc6d5efgh9ijklmnopqrstuvw8xyz"
+
+     const characters = process.env.CHARACTER_NEW_PASSWORD!
      const charactersLength = characters.length
 
      for (let i = 0; i < 10; i++) {

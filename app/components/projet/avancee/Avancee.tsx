@@ -17,6 +17,8 @@ export default function Avancee({ entry }: { entry: Avancee }) {
                message={entry.avancee_message ?? ""}
                date={toInputDate(entry.avancee_date)}
                visible={entry.avancee_visible_client}
+               documentId={entry.document_id}
+               documentName={entry.document_nom}
           />
      )
 }

@@ -4,6 +4,7 @@ import { Check, Pencil } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { DeleteAvancee } from "../DeleteButton"
+import DownloadButton from "@/app/components/documents/DownloadButton"
 
 const STATUSES = [
      { value: "en_cours", label: "En cours", pill: "pill-you" },
@@ -19,13 +20,15 @@ type Props = {
      message: string
      date: string
      visible?: boolean
+     documentId?: number | null
+     documentName?: string | null
 }
 
 function displayDate(date: string) {
      return date.split("-").reverse().join("/")
 }
 
-export default function AvanceeCard({ avancee_id, statut, titre, message, date, visible }: Props) {
+export default function AvanceeCard({ avancee_id, statut, titre, message, date, visible, documentId, documentName }: Props) {
      const router = useRouter()
      const [editing, setEditing] = useState(false)
      const [saving, setSaving] = useState(false)
@@ -135,6 +138,12 @@ export default function AvanceeCard({ avancee_id, statut, titre, message, date, 
                     <>
                          <strong>{titre}</strong>
                          {message && <p className="m-0 text-body-sm">{message}</p>}
+                         {documentId && documentName && (
+                              <div className="flex items-center gap-2">
+                                   <span className="muted min-w-0 flex-1 truncate text-sm">{documentName}</span>
+                                   <DownloadButton documentId={documentId} fileName={documentName} />
+                              </div>
+                         )}
                     </>
                )}
 

@@ -122,6 +122,17 @@ export function StepTable({ avancee, projet }: ProjectProps) {
                                         </span>
                                    )}
                                    <span className="muted text-body-sm">{step.avancee_message}</span>
+                                   {step.document_id && step.document_nom && (
+                                        <div className="flex items-center gap-2">
+                                             <span className="muted min-w-0 flex-1 truncate text-sm">
+                                                  {step.document_nom}
+                                             </span>
+                                             <DownloadButton
+                                                  documentId={step.document_id}
+                                                  fileName={step.document_nom}
+                                             />
+                                        </div>
+                                   )}
                               </div>
                          </li>
                     ))}

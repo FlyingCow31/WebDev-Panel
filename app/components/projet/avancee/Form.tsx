@@ -1,6 +1,11 @@
 "use client"
 import { Step } from "@/app/lib/steps"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+
+const MAX_FILE_SIZE = 4 * 1024 * 1024
+const ALLOWED_FILE_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp"]
 
 const statuses = [
      { value: "termine", label: "Terminé", checked: "has-checked:bg-ink has-checked:text-white" },
@@ -10,24 +15,36 @@ const statuses = [
 ]
 
 export default function AvForm({ id, etapes }: { id: number; etapes: readonly Step[] }) {
+     const router = useRouter()
+     const [fileName, setFileName] = useState("")
+     const [submitting, setSubmitting] = useState(false)
+     const [error, setError] = useState("")
+
      async function HandleSubmit(e: React.FormEvent<HTMLFormElement>) {
           e.preventDefault()
-          // Need to conver Number if check is null then it's false
-          const formData = new FormData(e.currentTarget)
-          formData.append("proj_id", String(id))
+          setSubmitting(true)
+          setError("")
+          try {
+               const formData = new FormData(e.currentTarget)
+               formData.append("proj_id", String(id))
 
-          const response = await fetch("/api/projects/avancee/create", {
-               method: "POST",
-               body: formData,
-          })
+               const response = await fetch("/api/projects/avancee/create", {
+                    method: "POST",
+                    body: formData,
+               })
 
-          if (!response.ok) {
-               const data = await response.json()
-               console.error(data.error)
-               return
+               if (!response.ok) {
+                    const data = await response.json().catch(() => null)
+                    setError(data?.error ?? "Impossible de publier l'avancée.")
+                    return
+               }
+
+               router.push(`/projets/${id}`)
+          } catch {
+               setError("Erreur réseau. Impossible de publier l'avancée.")
+          } finally {
+               setSubmitting(false)
           }
-
-          window.location.assign(`/projets/${id}`)
      }
      return (
           <form
@@ -119,12 +136,41 @@ export default function AvForm({ id, etapes }: { id: number; etapes: readonly St
                          </label>
                          <input id="f-date" type="date" defaultValue="2026-10-10" className="field" name="deadline" />
                     </div>
-                    {/* // TODO: include document submit logic in there */}
                     <div className="flex flex-col gap-2">
-                         <span className="label">Pièce jointe</span>
-                         <button type="button" className="btn btn-sm btn-dashed min-h-12">
-                              + Ajouter un document
-                         </button>
+                         <label htmlFor="f-document" className="label">
+                              Pièce jointe
+                         </label>
+                         <label className="btn btn-sm btn-dashed min-h-12 cursor-pointer">
+                              {fileName || "+ Ajouter un document"}
+                              <input
+                                   id="f-document"
+                                   type="file"
+                                   name="file"
+                                   accept="application/pdf,image/png,image/jpeg,image/webp"
+                                   className="sr-only"
+                                   onChange={(e) => {
+                                        const file = e.target.files?.[0]
+                                        setError("")
+                                        if (!file) {
+                                             setFileName("")
+                                             return
+                                        }
+                                        if (file.size > MAX_FILE_SIZE) {
+                                             setError("Le fichier dépasse 4 Mo.")
+                                             e.target.value = ""
+                                             setFileName("")
+                                             return
+                                        }
+                                        if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                                             setError("Format non autorisé (PDF, PNG, JPEG ou WebP).")
+                                             e.target.value = ""
+                                             setFileName("")
+                                             return
+                                        }
+                                        setFileName(file.name)
+                                   }}
+                              />
+                         </label>
                     </div>
                </div>
 
@@ -151,12 +197,18 @@ export default function AvForm({ id, etapes }: { id: number; etapes: readonly St
                     </div>
                </div>
 
+               {error && (
+                    <span role="alert" className="text-caption font-bold text-colerr-dark">
+                         {error}
+                    </span>
+               )}
+
                <div className="flex flex-wrap justify-end gap-3">
                     <Link href={`/projets/${id}`} className="btn">
                          Annuler
                     </Link>
-                    <button type="submit" className="btn btn-primary shadow-accent">
-                         Publier l&apos;avancée
+                    <button type="submit" disabled={submitting} className="btn btn-primary shadow-accent disabled:opacity-50">
+                         {submitting ? "Publication…" : "Publier l'avancée"}
                     </button>
                </div>
           </form>

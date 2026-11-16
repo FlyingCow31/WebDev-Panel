@@ -18,13 +18,19 @@ export async function GetAvanceesClient(proj_id: number) {
      const user = await AuthUser()
      if (!user) return null
 
-     const avancees = (await sql`SELECT avancee_id,
-               avancee_etape,
-               avancee_statut,
-               avancee_titre,
-               avancee_message,
-               avancee_date,
-               avancee_visible_client FROM avancee WHERE proj_id = ${proj_id} `) as Avancee[]
+     const avancees = (await sql`
+          SELECT a.avancee_id,
+               a.avancee_etape,
+               a.avancee_statut,
+               a.avancee_titre,
+               a.avancee_message,
+               a.avancee_date,
+               a.avancee_visible_client,
+               a.document_id,
+               d.document_nom
+          FROM avancee a
+          LEFT JOIN document d ON d.document_id = a.document_id
+          WHERE a.proj_id = ${proj_id}`) as Avancee[]
 
      return avancees
 }

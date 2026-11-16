@@ -3,11 +3,11 @@ import { redirect } from "next/navigation"
 import { DocumentSection, Progression, StepTable } from "../components/client/project"
 import { Suspense } from "react"
 import LogoutButton from "../components/root/LogoutButton"
+import { ClientPageSkeleton } from "../components/LoadingSkeletons"
 
 export default function ClientPage() {
-     // TODO : Integrate a loading skeletton
      return (
-          <Suspense fallback={<p className="p-6">Chargement…</p>}>
+          <Suspense fallback={<ClientPageSkeleton />}>
                <ClientContent />
           </Suspense>
      )
