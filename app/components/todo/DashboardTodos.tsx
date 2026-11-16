@@ -29,8 +29,8 @@ export default function DashboardTodos({ todos: initialTodos }: { todos: Todo[] 
                if (!response.ok) {
                     throw new Error(`Todo update failed with status ${response.status}`)
                }
-          } catch (error) {
-               console.error("Erreur lors de la mise à jour de la tâche.", error)
+          } catch {
+               console.error("Erreur lors de la mise à jour de la tâche.")
                setTodos((currentTodos) =>
                     currentTodos.map((todo) =>
                          todo.todo_id === todoId ? { ...todo, todo_done: previousTodo.todo_done } : todo,

@@ -10,7 +10,6 @@ export async function DELETE(request: NextRequest) {
      const { client_id } = data.data
 
      if (!client_id) return NextResponse.json({ error: "No data to delete" }, { status: 400 })
-     console.log(client_id)
      const result = await sql`DELETE FROM client WHERE client_id = ${client_id} RETURNING client_id`
      if (result.length === 0) {
           return NextResponse.json({ error: "Client not found or was not deleted." }, { status: 404 })

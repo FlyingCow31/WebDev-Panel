@@ -31,8 +31,6 @@ export default function Page() {
                     router.push("/client")
                }
           } else {
-               const data = await response.json()
-
                setError("Mauvais Identifiant ou mot de passe.")
           }
      }

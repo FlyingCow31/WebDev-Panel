@@ -33,10 +33,9 @@ export default async function ResetMail({ prenom, email, password }: FirstLoginM
                to: email,
                ...firstLoginMail({ prenom: prenom, email: email, password: password }),
           })
-     } catch (err) {
-          const message = err instanceof Error ? err.message : "SMTP request failed."
-          console.error("Mail error:", message)
-          throw new Error(`Impossible d'envoyer l'e-mail : ${message}`)
+     } catch {
+          console.error("Mail delivery failed.")
+          throw new Error("Impossible d'envoyer l'e-mail.")
      }
 }
 

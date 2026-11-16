@@ -3,7 +3,6 @@
 import { sql } from "@/app/lib/db"
 import { redis } from "@/app/lib/redis"
 import bcrypt from "bcryptjs"
-import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import z from "zod"
 
@@ -33,11 +32,6 @@ export async function POST(request: Request) {
 
      const { username, password, oldPassword, confirm } = result.data
 
-     console.log(password)
-     console.log("old password:", oldPassword)
-     console.log("confirm", confirm)
-     console.log("email:", username)
-
      const ip = request.headers.get("x-forwarded-for") ?? "unknown"
      const key = `login_attempts:${ip}`
      const attempts = (await redis.get<number>(key)) ?? 0
@@ -64,12 +58,10 @@ export async function POST(request: Request) {
      }
 
      const newHash = await bcrypt.hash(password, 10)
-     console.log(newHash)
 
      try {
           await sql`UPDATE utilisateur SET user_password = ${newHash} WHERE user_id = ${user.user_id}`
-     } catch (err) {
-          console.error(err)
+     } catch {
           return NextResponse.json({ error: "Erreur avec la communication serveur." }, { status: 500 })
      }
 

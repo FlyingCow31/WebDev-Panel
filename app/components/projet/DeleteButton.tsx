@@ -22,8 +22,8 @@ export default function DeleteButton({ proj_id, compact = false }: { proj_id: nu
                     return
                }
                router.push("/projets")
-          } catch (error) {
-               console.error("Erreur avec la suppression du projet.", error)
+          } catch {
+               console.error("Erreur avec la suppression du projet.")
                setConfirm("Erreur")
           } finally {
                setIsDeleting(false)
@@ -89,8 +89,8 @@ export function DeleteAvancee({ avancee_id }: { avancee_id: number }) {
                     return
                }
                router.refresh()
-          } catch (error) {
-               console.error("Erreur avec la suppression de l'avancee.", error)
+          } catch {
+               console.error("Erreur avec la suppression de l'avancee.")
                setConfirm("Erreur")
           } finally {
                setIsDeleting(false)
@@ -127,8 +127,8 @@ export function DeleteTodo({ todo_id, onDeleted }: { todo_id: number; onDeleted?
                     return
                }
                onDeleted?.(todo_id)
-          } catch (error) {
-               console.error("Erreur avec la suppression de la todo.", error)
+          } catch {
+               console.error("Erreur avec la suppression de la todo.")
                setConfirm("Erreur")
           } finally {
                setIsDeleting(false)

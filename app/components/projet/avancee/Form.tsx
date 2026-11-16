@@ -119,14 +119,14 @@ export default function AvForm({ id, etapes }: { id: number; etapes: readonly St
                     <label htmlFor="f-titre" className="label">
                          Titre
                     </label>
-                    <input id="f-titre" type="text" defaultValue="Oui" className="field" name="titre" />
+                    <input id="f-titre" type="text" className="field" name="titre" />
                </div>
 
                <div className="flex flex-col gap-2">
                     <label htmlFor="f-msg" className="label">
                          Message
                     </label>
-                    <textarea id="f-msg" rows={3} defaultValue="J'ai" className="field" name="message" />
+                    <textarea id="f-msg" rows={3} className="field" name="message" />
                </div>
 
                <div className="grid gap-3.5 sm:grid-cols-2">
@@ -134,7 +134,7 @@ export default function AvForm({ id, etapes }: { id: number; etapes: readonly St
                          <label htmlFor="f-date" className="label">
                               Date
                          </label>
-                         <input id="f-date" type="date" defaultValue="2026-10-10" className="field" name="deadline" />
+                         <input id="f-date" type="date" className="field" name="deadline" />
                     </div>
                     <div className="flex flex-col gap-2">
                          <label htmlFor="f-document" className="label">

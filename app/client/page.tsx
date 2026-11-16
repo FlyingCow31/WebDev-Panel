@@ -26,8 +26,6 @@ async function ClientContent() {
 
      const documents = await GetDocumentsClient(projet.proj_id)
 
-     console.log(client)
-
      return (
           <div className="mx-auto flex max-w-300 flex-col gap-6 px-4 py-6 sm:px-6 lg:gap-7 lg:py-8">
                <header className="flex flex-wrap items-center justify-between gap-3">

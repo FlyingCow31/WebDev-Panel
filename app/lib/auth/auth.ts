@@ -12,7 +12,9 @@ export function AdminCheck(request: NextRequest): boolean {
      if (!token) return false
 
      try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET!) as unknown as { role: string }
+          const decoded = jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ["HS256"] }) as unknown as {
+               role: string
+          }
           return decoded.role === "admin"
      } catch {
           return false
@@ -26,7 +28,7 @@ export async function AuthUser() {
      if (!token) return null
 
      try {
-          return jwt.verify(token, process.env.JWT_SECRET!) as unknown as {
+          return jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ["HS256"] }) as unknown as {
                id: number
                role: string
                client_id: number

@@ -35,8 +35,6 @@ export function Progression({ projet, avancee }: ProjectProps) {
      // Sorting the array to make it chronological ()
      const sortedAvancee = sortAvancees(visibleSteps ?? [], projet?.proj_type ?? "site")
 
-     console.log(stepIndex)
-
      return (
           <>
                <div className="flex flex-wrap items-end justify-between gap-4">

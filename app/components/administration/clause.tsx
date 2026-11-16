@@ -12,8 +12,8 @@ export type Company = {
 export const handleCopy = async (text: string) => {
      try {
           await navigator.clipboard.writeText(text)
-     } catch (err) {
-          console.error("failed to copy text:", err)
+     } catch {
+          console.error("Failed to copy text.")
      }
 }
 
@@ -62,8 +62,8 @@ export function DeleteClauseButton({ clause_id }: { clause_id: number }) {
                }
 
                router.refresh()
-          } catch (error) {
-               console.error("Erreur avec la suppression de la clause.", error)
+          } catch {
+               console.error("Erreur avec la suppression de la clause.")
                setConfirm("Erreur")
           } finally {
                setIsDeleting(false)

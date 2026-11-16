@@ -97,8 +97,8 @@ export function TodoParent({
                }
 
                return updates
-          } catch (error) {
-               console.error("Erreur lors de la mise à jour des tâches.", error)
+          } catch {
+               console.error("Erreur lors de la mise à jour des tâches.")
                return []
           }
      }

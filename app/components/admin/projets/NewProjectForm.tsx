@@ -25,7 +25,6 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
      const router = useRouter()
      const [clientMode, setClientMode] = useState<ClientMode>("existing")
      const [type, setType] = useState<ProjectType>("site")
-     const [access, setAccess] = useState(true)
 
      // Add informations within the Info Technique section.
      const [infos, setInfos] = useState<Info[]>([
@@ -38,7 +37,6 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
 
      function pickClientMode(mode: ClientMode) {
           setClientMode(mode)
-          if (mode === "new") setAccess(true)
      }
 
      // Function that sets the infos.
@@ -123,8 +121,8 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
 
                const data = await response.json()
                router.push(`/projets/${data.proj_id}`)
-          } catch (error) {
-               console.error("Project creation failed:", error)
+          } catch {
+               console.error("Project creation failed.")
                setErrors("Erreur réseau. Impossible de créer le projet.")
           } finally {
                setSubmitting(false)
@@ -173,7 +171,6 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
                                         value={clientId ?? ""}
                                         onChange={(e) => {
                                              setClientId(Number(e.target.value))
-                                             console.log(Number(e.target.value) || "Non")
                                         }}
                                    >
                                         <option value="" disabled>

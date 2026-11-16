@@ -56,9 +56,9 @@ export async function POST(request: NextRequest) {
                RETURNING document_id`
 
           return NextResponse.json({ success: true, document_id: doc[0].document_id })
-     } catch (error) {
+     } catch {
           await del(blob.pathname).catch(() => {})
-          console.error("Document insert failed:", error)
+          console.error("Document insert failed.")
           return NextResponse.json({ error: "Impossible d'enregistrer le document." }, { status: 500 })
      }
 }

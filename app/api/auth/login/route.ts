@@ -8,8 +8,12 @@ import bcrypt from "bcryptjs"
 const loginSchema = z.object({
      username: z.string().min(1).max(100).nonempty(),
      // Existing accounts may have valid passwords shorter than the registration minimum.
-     password: z.string().min(1).max(255).nonempty(),
-     /* .regex(/^(?=.*\d)(?=.*[^A-Za-z0-9]).+$/) */
+     password: z
+          .string()
+          .min(1)
+          .max(255)
+          .nonempty()
+          .regex(/^(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
 })
 
 export async function POST(request: Request) {
@@ -24,11 +28,11 @@ export async function POST(request: Request) {
 
      const ip = request.headers.get("x-forwarded-for") ?? "unknown"
      const key = `login_attempts:${ip}`
-     /* const attempts = (await redis.get<number>(key)) ?? 0 */
+     const attempts = (await redis.get<number>(key)) ?? 0
 
-     /* if (attempts >= 5) {
+     if (attempts >= 5) {
           return NextResponse.json({ error: "Rate limited, try again in 15 minutes" }, { status: 429 })
-     } */
+     }
 
      const users = await sql`SELECT * FROM utilisateur WHERE user_mail = ${username}`
      const user = users[0]
@@ -36,24 +40,20 @@ export async function POST(request: Request) {
      const hash = user?.user_password ?? "$2b$10$WSNV9Om5ouu7yuF9gjfgB.TiXz3SAGi2Z.iBhPOpQ7npmZIvx1EcK"
 
      const passwordCheck = await bcrypt.compare(password, hash)
-     console.log("login debug:", {
-          username,
-          found: !!user,
-          hashStart: user?.user_password?.slice(0, 7),
-          passwordCheck,
-     })
+
      if (!user || !passwordCheck) {
           // Increase the rate limiting by one
-          /* await redis.set(key, attempts + 1, { ex: 60 * 15 }) */
+          await redis.set(key, attempts + 1, { ex: 60 * 15 })
           return NextResponse.json({ error: "Wrong Credentials" }, { status: 401 })
      }
 
      // Everything's good from there
 
      const role = user.user_role
-     console.log(role)
      const client_id = user.client_id
-     const token = jwt.sign({ id: user.id, username, role, client_id }, process.env.JWT_SECRET!, { expiresIn: "24h" })
+     const token = jwt.sign({ id: user.user_id, username, role, client_id }, process.env.JWT_SECRET!, {
+          expiresIn: "24h",
+     })
 
      const response = NextResponse.json({ success: true, role })
      response.cookies.set("token", token, {
@@ -63,6 +63,6 @@ export async function POST(request: Request) {
           maxAge: 60 * 60 * 24,
      })
 
-     /* await redis.del(key) */
+     await redis.del(key)
      return response
 }

@@ -8,11 +8,6 @@ import { connection } from "next/server"
 import { Suspense } from "react"
 import { FinancesPageSkeleton } from "@/app/components/LoadingSkeletons"
 
-const expenses = [
-     { label: "Abonnement Vercel Pro", category: "Outils", date: "01/10", amount: "20 €" },
-     { label: "Nom de domaine", category: "Client refacturé", date: "28/09", amount: "12 €" },
-]
-
 export default function FinancesPage() {
      return (
           <Suspense fallback={<FinancesPageSkeleton />}>
@@ -31,16 +26,15 @@ export async function FinancesPageContent() {
      const today = new Date()
 
      let ca = 0
-     let dep = 0
-     const newproj = [...projets].map((p) => p.proj_prix).forEach((p) => (ca = ca + p))
-     const allDep = [...depenses].map((d) => d.depense_mont).forEach((d) => (dep = dep + d))
+     const dep = [...depenses].reduce((sum, d) => sum + d.depense_mont, 0) / 100
+     projets.forEach((projet) => (ca += projet.proj_prix))
 
      const txh = [...projets].map((p) => p.proj_tps_non_rem + p.proj_tps_rem).reduce((sum, total) => sum + total, 0)
      const pourcentageca = Math.ceil((ca / 100 / 77700) * 100)
 
      const kpis = [
           { label: "Dépenses 2026", value: `${dep} €`, tone: "" },
-          { label: "Bénéfice estimé", value: `${(ca - (ca * 20) / 100) / 100} €`, tone: "" },
+          { label: "Bénéfice estimé", value: `${(ca - (ca * 20) / 100) / 100 - dep} €`, tone: "" },
           {
                label: "Taux horaire moyen",
                value: `${((ca - (ca * 20) / 100) / 100 / (txh / 60)).toFixed(1)}€ / h`,
@@ -55,13 +49,12 @@ export async function FinancesPageContent() {
                     (p) =>
                          p.proj_done_at &&
                          new Date(p.proj_done_at).getMonth() + 1 === Number(month) &&
-                         // To change when 2027
+                         // To change when 2027/ To implement a list of years that automatically changes this value
                          new Date(p.proj_done_at).getFullYear() === 2026,
                )
                .map((p) => p.proj_prix)[0]
 
           const height = `${(monthPrice / 100 / (ca / 100)) * 100}%`
-          console.log(height)
           return height
      }
 
@@ -88,7 +81,7 @@ export async function FinancesPageContent() {
                          <Link href="https://app.indy.fr/facturation/factures" className="btn">
                               Outil de facturation ↗
                          </Link>
-                         <ExpenseModal projects={projets} spent={315000} profit={2525000} />
+                         <ExpenseModal projects={projets} spent={dep} profit={ca - dep} />
                     </div>
                </header>
 

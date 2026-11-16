@@ -104,7 +104,6 @@ function AvanceeProject({ avancees, statut, projects }: { avancees: Avancee[]; s
      if (statut === "late") {
           sortedProjects = new Set(projects.filter((p) => p.proj_late === true).map((p) => p.proj_id))
      }
-     console.log(sortedProjects)
      return sortedProjects
 }
 export function TranslateAI(statut: string) {

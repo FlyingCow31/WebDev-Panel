@@ -4,21 +4,13 @@ import { AdminProgression } from "@/app/components/admin/project"
 import Link from "next/link"
 import { Suspense } from "react"
 
-import { formatTitle, TranslateAI } from "../page"
+import { formatTitle } from "../page"
 import { cacheLife } from "next/cache"
-import { timeStamp } from "console"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import TimeEntryModal from "@/app/components/projet/TimeEntryModal"
 import Avancee from "@/app/components/projet/avancee/Avancee"
 import FinishButton from "@/app/components/projet/FinishButton"
 import { ProjectPageSkeleton } from "@/app/components/LoadingSkeletons"
-
-const tech = [
-     { label: "Hébergement", value: "Vercel" },
-     { label: "Domaine", value: "OVH · boulangerie-lafont.fr" },
-     { label: "Dépôt", value: "GitHub", href: "#" },
-     { label: "Accès et clés", value: "Gestionnaire de mots de passe", href: "#" },
-]
 
 export default async function ProjetPage({ params }: { params: Promise<{ id: number }> }) {
      return (
@@ -62,8 +54,6 @@ export async function ProjetPageContent({ params }: { params: Promise<{ id: numb
      const projet = (await getProject(id)) as Projet
      const avancees = await getAvancee(id)
      const client = await getClient(projet.client_id)
-
-     console.log(projet.proj_info)
 
      const latestAv = [...avancees].sort((a, b) => b.avancee_date.getTime() - a.avancee_date.getTime())[0]
 

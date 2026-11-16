@@ -91,22 +91,22 @@ export async function POST(request: NextRequest) {
           revalidateTag("projets", { expire: 0 })
           revalidatePath(`/projets/${proj_id}`)
           return NextResponse.json({ success: true, av_id })
-     } catch (error) {
+     } catch {
           if (documentId !== null) {
                try {
                     await sql`DELETE FROM document WHERE document_id = ${documentId}`
-               } catch (cleanupError) {
-                    console.error("Failed to remove unattached document:", documentId, cleanupError)
+               } catch {
+                    console.error("Failed to remove unattached document.")
                }
           }
           if (blobPath) {
                try {
                     await del(blobPath)
-               } catch (cleanupError) {
-                    console.error("Failed to remove uploaded document blob:", blobPath, cleanupError)
+               } catch {
+                    console.error("Failed to remove uploaded document blob.")
                }
           }
-          console.error("Failed to create project update:", error)
+          console.error("Failed to create project update.")
           return NextResponse.json({ error: "Impossible de publier l'avancée." }, { status: 500 })
      }
 }

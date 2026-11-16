@@ -23,8 +23,8 @@ export default function ContinueButton({ proj_id, proj_nom }: { proj_id: number;
                     return
                }
                router.refresh()
-          } catch (requestError) {
-               console.error("Erreur lors de la reprise du projet.", requestError)
+          } catch {
+               console.error("Erreur lors de la reprise du projet.")
                setError(true)
           } finally {
                setIsContinuing(false)

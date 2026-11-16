@@ -22,8 +22,8 @@ export default function FinishButton({ proj_id }: { proj_id: number }) {
                     return
                }
                router.push("/projets")
-          } catch (requestError) {
-               console.error("Erreur lors de la fin du projet.", requestError)
+          } catch {
+               console.error("Erreur lors de la fin du projet.")
                setError(true)
           } finally {
                setIsFinishing(false)

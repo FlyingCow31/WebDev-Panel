@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
           revalidateTag("sites", { expire: 0 })
 
           after(async () => {
-               await checkSite(site_id).catch((error) => console.error("First check failed:", domain, error))
+               await checkSite(site_id).catch(() => console.error("Initial site check failed."))
                revalidateTag("sites", { expire: 0 })
           })
 
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
           if ((error as { code?: string }).code === "23505") {
                return NextResponse.json({ error: "Ce domaine est déjà surveillé." }, { status: 409 })
           }
-          console.error("Site insert failed:", error)
+          console.error("Site insert failed.")
           return NextResponse.json({ error: "Impossible d'ajouter le site." }, { status: 500 })
      }
 }

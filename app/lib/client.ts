@@ -8,7 +8,7 @@ export async function GetClient() {
 
      const [clientRows, projetRows] = await Promise.all([
           sql`SELECT * FROM client WHERE client_id = ${user.client_id}`,
-          sql`SELECT * FROM projet WHERE client_id = ${user.client_id}`,
+          sql`SELECT * FROM projet WHERE client_id = ${user.client_id} ORDER BY proj_created_at DESC`,
      ])
      const client = clientRows[0] as Client
      const projet = projetRows[0] as Projet | undefined
@@ -44,8 +44,13 @@ export async function GetDocumentsClient(proj_id: number) {
      proj_id,
      document_nom,
      document_type,
-     document_link,
      document_visible_client,
-     document_created_at FROM document WHERE proj_id = ${proj_id}`) as Document[]
+     document_created_at 
+     FROM document d 
+     JOIN projet p ON p.proj_id = d.proj_id
+     WHERE d.proj_id = ${proj_id} 
+          AND p.client_id = ${user.client_id}
+          AND document_visible_client = true`) as Document[]
+
      return documents
 }

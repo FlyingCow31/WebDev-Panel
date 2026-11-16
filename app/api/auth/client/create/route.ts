@@ -4,7 +4,7 @@ import { sql } from "@/app/lib/db"
 import ResetMail from "@/app/lib/mails/reset"
 import { Client } from "@/app/lib/types"
 import bcrypt from "bcryptjs"
-import { revalidateTag, updateTag } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 import z from "zod"
 

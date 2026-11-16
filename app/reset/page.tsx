@@ -46,15 +46,10 @@ export default function Page() {
      const handleSubmit = async (e: React.SubmitEvent) => {
           e.preventDefault()
 
-          console.log(password || "rien")
-          console.log(confirm || "rien")
-          console.log("same?", same)
-
           if (checkPassword(password) && checkSame(confirm)) {
                const trimPassword = password.trim()
                const trimConfirm = confirm.trim()
-               console.log(password || "rien")
-               console.log(confirm || "rien")
+
                const response = await fetch("/api/auth/user/modify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -65,7 +60,7 @@ export default function Page() {
                     router.push("/login")
                } else {
                     const data = await response.json()
-                    console.error(data.error)
+
                     setError(data.error[0])
                }
           } else {

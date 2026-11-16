@@ -56,8 +56,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
 
      try {
           await del(deleted[0].document_link)
-     } catch (error) {
-          console.error("Blob not deleted:", deleted[0].document_link, error)
+     } catch {
+          console.error("Blob deletion failed.")
      }
 
      return NextResponse.json({ success: true })
