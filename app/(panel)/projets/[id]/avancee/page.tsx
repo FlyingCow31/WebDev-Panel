@@ -1,9 +1,13 @@
+import type { Metadata } from "next"
 import AvForm from "@/app/components/projet/avancee/Form"
 import { getProject } from "@/app/lib/data"
 import { type ProjectType, STEP_TEMPLATES } from "@/app/lib/steps"
 
 import { Suspense } from "react"
 import { AvanceeFormSkeleton } from "@/app/components/LoadingSkeletons"
+import { CheckRedirect } from "@/app/lib/auth/auth"
+
+export const metadata: Metadata = { title: "Nouvelle avancée" }
 
 async function GetEtapes(id: number): Promise<(typeof STEP_TEMPLATES)[ProjectType]> {
      const projet = await getProject(Number(id))
@@ -20,6 +24,7 @@ export default function AvanceePage({ params }: { params: Promise<{ id: number }
 }
 
 export async function AvanceePageContent({ params }: { params: Promise<{ id: number }> }) {
+     await CheckRedirect()
      const { id } = await params
 
      const etapes = await GetEtapes(id)

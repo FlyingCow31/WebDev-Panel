@@ -1,68 +1,98 @@
-# Panel
+<div align="center">
+
+<img src="docs/readme/banner.svg" alt="PANEL. Gestion de projets freelance et espace client" width="100%">
+
+<br>
+
+<img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-9723C9?style=flat-square&labelColor=111111"> <img alt="TypeScript 5" src="https://img.shields.io/badge/TypeScript-5-9723C9?style=flat-square&labelColor=111111"> <img alt="Tailwind v4" src="https://img.shields.io/badge/Tailwind-v4-9723C9?style=flat-square&labelColor=111111"> <img alt="Neon Postgres" src="https://img.shields.io/badge/Neon-Postgres-7FBC8C?style=flat-square&labelColor=111111"> <img alt="Vercel Blob + Cron" src="https://img.shields.io/badge/Vercel-Blob_%2B_Cron-7FBC8C?style=flat-square&labelColor=111111"> <img alt="Licence MIT" src="https://img.shields.io/badge/Licence-MIT-FF6B6B?style=flat-square&labelColor=111111">
+
+**[panel.gaeltournier.dev](https://panel.gaeltournier.dev)** · [Dépôt GitHub](https://github.com/FlyingCow31/newportfolioclient)
+
+</div>
+
+---
 
 Panel de gestion interne pour toute entreprise (plutôt axé micro-entreprise) de professions libérales, avec un espace client pour suivre l'avancée des projets. Style néo-brutaliste, lié à mon style graphique de prédilection.
 
-Production : [panel.gaeltournier.dev](https://panel.gaeltournier.dev)
-Dépôt : [github.com/FlyingCow31/newportfolioclient](https://github.com/FlyingCow31/newportfolioclient)
-
-Compte de démonstration :
-
-- Utilisateur : `Test`
-- Mot de passe : `Test123@`
+> [!NOTE]
+> **Compte de démonstration** · utilisateur : `Test` · mot de passe : `Test123@`
 
 ---
 
 ## Disclaimer : utilisation de l'IA
 
-Ce projet est avant tout un projet backend. La quasi-totalité du front-end a été réalisée avec l'IA, entraînée sur mes projets et sur mon style graphique.
-Le backend a été réalisé à 95 % à la main, à l'aide de la documentation, hormis la partie Todo (la gestion des states a été faite par IA ; dans tous les cas, ça se voit).
+> [!IMPORTANT]
+> Ce projet est avant tout un projet backend. La quasi-totalité du front-end a été réalisée avec l'IA, entraînée sur mes projets et sur mon style graphique.
+> Le backend a été réalisé à 95 % à la main, à l'aide de la documentation, hormis la partie Todo (la gestion des states a été faite par IA ; dans tous les cas, ça se voit).
 
 ---
 
 ## Sommaire
 
-- [Fonctionnalités](#fonctionnalités)
-- [Stack](#stack)
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Variables d'environnement](#variables-denvironnement)
-- [Base de données](#base-de-données)
-- [Scripts](#scripts)
-- [Structure du projet](#structure-du-projet)
-- [Routes API](#routes-api)
-- [Rôles et accès](#rôles-et-accès)
-- [Déploiement](#déploiement)
-- [Contribution](#contribution)
-- [Licence](#licence)
+|                                                                 |                                                      |                                        |
+| --------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------- |
+| **01** · [Fonctionnalités](#fonctionnalités)                    | **06** · [Base de données](#base-de-données)         | **11** · [Déploiement](#déploiement)   |
+| **02** · [Stack](#stack)                                        | **07** · [Scripts](#scripts)                         | **12** · [Contribution](#contribution) |
+| **03** · [Prérequis](#prérequis)                                | **08** · [Structure du projet](#structure-du-projet) | **13** · [Licence](#licence)           |
+| **04** · [Installation](#installation)                          | **09** · [Routes API](#routes-api)                   |                                        |
+| **05** · [Variables d'environnement](#variables-denvironnement) | **10** · [Rôles et accès](#rôles-et-accès)           |                                        |
 
 ---
 
 ## Fonctionnalités
 
+<img src="docs/readme/features.svg" alt="Les modules du panel : Accueil, Projets, Clients, Finances, Administration, Monitoring, Todo, Espace client" width="100%">
+
 ### Panel admin
 
-- **Accueil** : vue d'ensemble des projets en cours, échéances et alertes
-- **Projets** : suivi des projets, étapes, avancées, temps passé (rémunéré et non rémunéré)
-- **Clients** : fiches clients et création des accès à l'espace client
-- **Finances** : chiffre d'affaires, factures, dépenses, plafond micro-entreprise
-- **Administration** : informations de l'entreprise, échéances, justificatifs, bibliothèque de clauses
-- **Monitoring** : certificats SSL et scores Lighthouse des sites livrés
-- **Todo** : tâches liées ou non à un projet
+| Module             | Ce qu'il fait                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| **Accueil**        | Vue d'ensemble des projets en cours, échéances et alertes                                         |
+| **Projets**        | Étapes, avancées (modifiables sur place), temps passé rémunéré et non rémunéré, taux horaire réel |
+| **Clients**        | Fiches clients modifiables, création des accès à l'espace client, documents partagés              |
+| **Finances**       | Chiffre d'affaires, factures, dépenses, plafond micro-entreprise                                  |
+| **Administration** | Informations de l'entreprise, échéances, justificatifs, bibliothèque de clauses                   |
+| **Monitoring**     | Certificats SSL et scores Lighthouse des sites livrés, vérifiés automatiquement                   |
+| **Todo**           | Tâches liées ou non à un projet                                                                   |
 
 ### Espace client (`/client`)
 
 - Avancée du projet étape par étape
-- Documents et factures
+- Documents à télécharger (devis, onboarding, factures), servis depuis un stockage privé
 - Changement du mot de passe provisoire à la première connexion (`/reset`)
+
+### Documents
+
+Les fichiers sont stockés dans un store **Vercel Blob privé** : aucun fichier n'a d'URL publique. Chaque téléchargement passe par `/api/documents/[id]`, qui vérifie la session et, pour un client, que le document appartient bien à l'un de ses projets et qu'il est visible.
+
+| Règle            | Valeur                                        |
+| ---------------- | --------------------------------------------- |
+| Formats acceptés | PDF, PNG, JPEG, WebP                          |
+| Taille maximale  | 4 Mo                                          |
+| Visibilité       | Choisie à l'envoi (« Visible par le client ») |
+
+### Monitoring
+
+| Vérification       | Comment                                                                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Certificat SSL** | Connexion TLS sur le port 443 : date d'expiration et validité du certificat                                                                   |
+| **Lighthouse**     | API Google PageSpeed Insights, stratégie mobile : performance, accessibilité, bonnes pratiques, SEO                                           |
+| **Planification**  | Vercel Cron, une fois par jour (`vercel.json`), plus un bouton « Relancer les tests »                                                         |
+| **Alertes**        | Certificat qui expire dans moins de 14 jours, expiré ou invalide, ou vérification en échec ; le nombre d'alertes s'affiche dans la navigation |
 
 ### Étapes des projets
 
-Les étapes sont définies en dur dans `app/lib/steps.ts` :
+<img src="docs/readme/steps.svg" alt="Étapes des projets : site (Démarrage, Développement, Référencement, Mise en ligne) et maintenance (Diagnostic, Intervention, Vérification)" width="100%">
 
-| Type          | Étapes                                                       |
-| ------------- | ------------------------------------------------------------ |
-| `site`        | Démarrage, Développement, Référencement (SEO), Mise en ligne |
-| `maintenance` | Diagnostic, Intervention, Vérification                       |
+Les étapes sont définies dans `app/lib/steps.ts`, la seule source utilisée par toutes les pages :
+
+| Type          | Clés stockées en base                   |
+| ------------- | --------------------------------------- |
+| `site`        | `demarrage`, `dev`, `seo`, `mel`        |
+| `maintenance` | `diagnostic`, `intervention`, `recette` |
+
+> [!TIP]
+> Modifier un libellé dans `steps.ts` suffit pour le mettre à jour partout. Changer une **clé** demande aussi de mettre à jour les avancées déjà enregistrées.
 
 ---
 
@@ -72,13 +102,15 @@ Les étapes sont définies en dur dans `app/lib/steps.ts` :
 | ---------------- | ----------------------------------------------------------- |
 | Framework        | Next.js 16 (App Router, Cache Components)                   |
 | Langage          | TypeScript                                                  |
-| UI               | React 19                                                    |
+| UI               | React 19, Lucide                                            |
 | Style            | Tailwind CSS v4                                             |
 | Base de données  | PostgreSQL (Neon, `@neondatabase/serverless`)               |
+| Fichiers         | Vercel Blob (store privé)                                   |
 | Authentification | JWT en cookie httpOnly (`jsonwebtoken`, `jose`), `bcryptjs` |
 | Validation       | Zod                                                         |
 | Rate limiting    | Upstash Redis                                               |
 | E-mails          | Nodemailer (SMTP)                                           |
+| Monitoring       | API Google PageSpeed Insights, Vercel Cron                  |
 | Hébergement      | Vercel                                                      |
 
 ---
@@ -87,10 +119,12 @@ Les étapes sont définies en dur dans `app/lib/steps.ts` :
 
 - Node.js 20 ou plus récent
 - npm
+- Un compte Vercel
 - Une base PostgreSQL (Neon)
 - Une base Upstash Redis
+- Un store Vercel Blob **privé**
 - Un compte SMTP pour l'envoi des e-mails
-- Clé API Google (optionnel)
+- Une clé API Google, restreinte à PageSpeed Insights (facultatif, pour le monitoring)
 
 ---
 
@@ -103,59 +137,63 @@ npm install
 cp .env.exemple .env
 ```
 
-Ne pas oublier de créer un compte vercel, de déployer Neon, Vercel Blob et redis.
-
 Remplir le fichier `.env` (voir ci-dessous), créer les tables (voir [Base de données](#base-de-données)), puis lancer le serveur de développement :
 
 ```bash
 npm run dev
 ```
 
+Le panel est accessible sur [http://localhost:3000](http://localhost:3000).
+
 ---
 
 ## Variables d'environnement
 
-Toutes les variables sont listées dans [`.env.exemple`](./.env.exemple).
+Toutes les variables sont listées et commentées dans [`.env.exemple`](./.env.exemple).
 
-| Variable                      | Rôle                                                          |
-| ----------------------------- | ------------------------------------------------------------- |
-| `DATABASE_URL`                | URL de connexion à la base Neon                               |
-| `DATABASE_URL_POOLED`         | URL poolée de la base Neon (facultative)                      |
-| `JWT_SECRET`                  | Clé secrète de signature des JWT (chaîne longue et aléatoire) |
-| `JWT_EXPIRES_IN`              | Durée de validité du JWT, en secondes                         |
-| `KV_REST_API_URL`             | URL de l'API REST Upstash                                     |
-| `KV_REST_API_TOKEN`           | Token de l'API REST Upstash                                   |
-| `KV_REST_API_READ_ONLY_TOKEN` | Token Upstash en lecture seule                                |
-| `KV_URL`                      | URL Upstash (fournie par l'intégration Vercel)                |
-| `REDIS_URL`                   | URL Redis pour le rate limiting                               |
-| `SMTP_HOST`                   | Serveur SMTP                                                  |
-| `SMTP_PORT`                   | Port SMTP (465 en général)                                    |
-| `SMTP_USER`                   | Utilisateur SMTP (souvent l'adresse e-mail)                   |
-| `SMTP_PASS`                   | Mot de passe SMTP                                             |
-| `PRIV_EMAIL`                  | Adresse d'expédition des e-mails                              |
-| `NEXT_PUBLIC_APP_URL`         | URL de l'application (dépréciée)                              |
+| Variable                      |  Requise   | Rôle                                                                                                           |
+| ----------------------------- | :--------: | -------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                |     ✔      | URL de connexion à la base Neon                                                                                |
+| `DATABASE_URL_POOLED`         |            | URL poolée de la base Neon                                                                                     |
+| `JWT_SECRET`                  |     ✔      | Clé secrète de signature des JWT (chaîne longue et aléatoire)                                                  |
+| `JWT_EXPIRES_IN`              |            | Durée de validité du JWT, en secondes                                                                          |
+| `CHARACTER_NEW_PASSWORD`      |     ✔      | Caractères utilisés pour générer les mots de passe provisoires (sans caractères spéciaux, voir `.env.exemple`) |
+| `KV_REST_API_URL`             |     ✔      | URL de l'API REST Upstash                                                                                      |
+| `KV_REST_API_TOKEN`           |     ✔      | Token de l'API REST Upstash                                                                                    |
+| `KV_REST_API_READ_ONLY_TOKEN` |            | Token Upstash en lecture seule                                                                                 |
+| `KV_URL`                      |            | URL Upstash (fournie par l'intégration Vercel)                                                                 |
+| `REDIS_URL`                   |            | URL Redis (TCP)                                                                                                |
+| `SMTP_HOST`                   |     ✔      | Serveur SMTP                                                                                                   |
+| `SMTP_PORT`                   |     ✔      | Port SMTP (465 en général)                                                                                     |
+| `SMTP_USER`                   |     ✔      | Utilisateur SMTP (souvent l'adresse e-mail)                                                                    |
+| `SMTP_PASS`                   |     ✔      | Mot de passe SMTP                                                                                              |
+| `PRIV_EMAIL`                  |            | Adresse d'expédition des e-mails                                                                               |
+| `BLOB_STORE_ID`               |     ✔      | Identifiant du store Vercel Blob (ajouté par Vercel quand le store est relié au projet)                        |
+| `BLOB_READ_WRITE_TOKEN`       |   local    | Token du store, pour le développement local (sur Vercel, l'authentification passe par OIDC)                    |
+| `GOOGLE_API_KEY`              | monitoring | Clé API Google PageSpeed Insights                                                                              |
+| `CRON_SECRET`                 | monitoring | Chaîne aléatoire ; Vercel l'envoie à chaque appel du cron                                                      |
 
-> Ne jamais versionner le fichier `.env`.
+> [!CAUTION]
+> Ne jamais versionner le fichier `.env`. Sur Vercel, les variables marquées « sensibles » ne peuvent plus être relues : gardez une copie de vos valeurs locales.
 
 ---
 
 ## Base de données
 
-Le schéma suit une conception MERISE (dictionnaire de données, MCD, MLD). Les montants sont stockés en centimes et les durées en minutes.
-Le schéma MERISE est inclu dans le repo.
+Le schéma suit une conception MERISE (dictionnaire de données, MCD, MLD), inclus dans le dépôt (`Panel-BDD.drawio`). Les montants sont stockés en **centimes** et les durées en **minutes**.
 
-| Table         | Contenu                                                  |
-| ------------- | -------------------------------------------------------- |
-| `client`      | Clients (personne ou entreprise)                         |
-| `utilisateur` | Comptes de connexion (admin ou client)                   |
-| `projet`      | Projets, prix, temps passé, infos techniques (JSONB)     |
-| `avancee`     | Avancées de chaque étape d'un projet                     |
-| `document`    | Documents liés à un projet (devis, onboarding, facture…) |
-| `facture`     | Factures émises et leur statut de paiement               |
-| `depense`     | Dépenses, liées ou non à un projet                       |
-| `site`        | Sites surveillés (SSL, Lighthouse)                       |
-| `todo`        | Tâches, liées ou non à un projet                         |
-| `clause`      | Clauses réutilisables pour devis et factures             |
+| Table         | Contenu                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `client`      | Clients (personne ou entreprise)                                                                                            |
+| `utilisateur` | Comptes de connexion (admin ou client)                                                                                      |
+| `projet`      | Projets, prix, temps passé, infos techniques (JSONB)                                                                        |
+| `avancee`     | Avancées de chaque étape d'un projet                                                                                        |
+| `document`    | Documents liés à un projet (devis, onboarding, facture…) ; `document_link` contient le chemin du fichier dans le store Blob |
+| `facture`     | Factures émises et leur statut de paiement                                                                                  |
+| `depense`     | Dépenses, liées ou non à un projet                                                                                          |
+| `site`        | Sites surveillés : expiration SSL, rapport Lighthouse (JSONB), date de vérification                                         |
+| `todo`        | Tâches, liées ou non à un projet                                                                                            |
+| `clause`      | Clauses réutilisables pour devis et factures                                                                                |
 
 ### Suppressions en cascade
 
@@ -170,6 +208,9 @@ Le schéma MERISE est inclu dans le repo.
 | `projet` → `todo`        | `SET NULL` | La tâche reste, sans projet                          |
 | `projet` → `depense`     | `SET NULL` | La dépense reste, sans projet                        |
 | `document` → `avancee`   | `SET NULL` | L'avancée reste, sans document                       |
+
+> [!WARNING]
+> `CASCADE` supprime les lignes de `document`, mais pas les fichiers du store Blob : ils doivent être supprimés avec `del()`.
 
 ### Script de création
 
@@ -301,12 +342,12 @@ Le premier compte admin se crée directement en base, avec un mot de passe hach�
 
 ## Scripts
 
-| Commande        | Action                           |
-| --------------- | -------------------------------- |
-| `npm run dev`   | Serveur de développement         |
-| `npm run build` | Build de production              |
-| `npm run start` | Lance le build de production     |
-| `npm run lint`  | Vérification du code avec ESLint |
+| Commande        | Action                                                         |
+| --------------- | -------------------------------------------------------------- |
+| `npm run dev`   | Serveur de développement                                       |
+| `npm run build` | Build de production (avec la vérification TypeScript complète) |
+| `npm run start` | Lance le build de production                                   |
+| `npm run lint`  | Vérification du code avec ESLint                               |
 
 ---
 
@@ -327,48 +368,64 @@ app/
 ├── login/                    Connexion
 ├── reset/                    Changement du mot de passe provisoire
 ├── api/                      Routes API
-├── components/               Composants client (modales, formulaires, navigation)
+├── actions/                  Compteurs de la navigation
+├── components/               Composants client
 │   ├── admin/
 │   ├── administration/
 │   ├── client/
+│   ├── documents/            Envoi, téléchargement, suppression
 │   ├── finances/
-│   └── projet/
+│   ├── monitoring/           Ajout de site, vérification, suppression
+│   ├── projet/
+│   ├── root/
+│   ├── todo/
+│   ├── LoadingSkeletons.tsx
+│   ├── NavLinks.tsx
+│   └── NavList.tsx
 ├── lib/
 │   ├── auth/                 Vérification du JWT, génération de mot de passe
 │   ├── mails/                Modèles d'e-mails
+│   ├── client.ts             Données de l'espace client
+│   ├── data.ts               Requêtes de lecture (mises en cache)
 │   ├── db.ts                 Connexion Neon
+│   ├── monitoring.ts         Vérification SSL et appel PageSpeed
 │   ├── redis.ts              Connexion Upstash
-│   ├── data.ts               Requêtes de lecture
 │   ├── steps.ts              Étapes des projets
 │   └── types.ts              Types partagés
 ├── globals.css               Thème et classes partagées
 └── layout.tsx
+docs/readme/                  Illustrations de ce README
+vercel.json                   Planification du cron de monitoring
 ```
 
 ---
 
 ## Routes API
 
-| Domaine          | Routes                                                                             |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| Authentification | `auth/login`, `auth/logout`                                                        |
-| Utilisateurs     | `auth/client/create`, `auth/client/delete`, `auth/user/modify`, `auth/user/delete` |
-| Projets          | `projects/create`, `projects/delete`, `projects/modify/finish`                     |
-| Avancées         | `projects/avancee/create`, `projects/avancee/delete`                               |
-| Finances         | `finances/facture/create`, `finances/facture/pay`, `finances/depense/create`       |
-| Clauses          | `clauses/create`                                                                   |
-| Todo             | `todo/create`, `todo/modify`, `todo/delete`                                        |
+Toutes les routes sont préfixées par `/api/`. Sauf mention contraire, elles sont réservées à l'admin.
 
-Toutes les routes sont préfixées par `/api/`.
+| Domaine          | Routes                                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| Authentification | `auth/login`, `auth/logout` (publiques)                                                                     |
+| Clients          | `auth/client/create`, `auth/client/modify`, `auth/client/delete`                                            |
+| Utilisateur      | `auth/user/modify` (changement de mot de passe)                                                             |
+| Projets          | `projects/create`, `projects/delete`, `projects/modify/finish`, `projects/modify/continue`                  |
+| Avancées         | `projects/avancee/create`, `projects/avancee/modify`, `projects/avancee/delete`                             |
+| Temps            | `projects/heures/add`                                                                                       |
+| Documents        | `documents/upload`, `documents/[id]` (`GET` : admin ou client propriétaire ; `DELETE` : admin)              |
+| Finances         | `finances/facture/create`, `finances/facture/pay`, `finances/depense/create`                                |
+| Clauses          | `clauses/create`, `clauses/delete`                                                                          |
+| Todo             | `todo/create`, `todo/modify`, `todo/delete`                                                                 |
+| Monitoring       | `monitoring/sites`, `monitoring/sites/[id]`, `monitoring/check`, `monitoring/cron` (admin ou `CRON_SECRET`) |
 
 ---
 
 ## Rôles et accès
 
-| Rôle     | Accès                                  |
-| -------- | -------------------------------------- |
-| `admin`  | Tout le panel                          |
-| `client` | Uniquement `/client`, pour ses projets |
+| Rôle     | Accès                                                            |
+| -------- | ---------------------------------------------------------------- |
+| `admin`  | Tout le panel                                                    |
+| `client` | Uniquement `/client`, pour ses projets et ses documents visibles |
 
 Création d'un accès client :
 
@@ -381,16 +438,20 @@ Création d'un accès client :
 
 ## Déploiement
 
-L'instance de production est déployée sur Vercel ; chaque push sur `main` déclenche un déploiement.
+L'instance de production est déployée sur Vercel ; chaque push sur `master` déclenche un déploiement.
 
 ### Déployer sa propre instance
 
 1. Forker le projet
 2. Créer une base sur Neon et y exécuter le [script de création](#script-de-création)
 3. Créer le premier compte admin en base
-4. Renseigner le `.env` à partir de `.env.exemple`
-5. Remplacer les données en dur (informations de l'entreprise, adresse d'expédition des e-mails, URL de production)
-6. Déployer sur Vercel (en renseignant les variables d'environnement dans les paramètres du projet), ou héberger sur son propre serveur
+4. Créer un store Vercel Blob **privé** et le relier au projet
+5. Renseigner le `.env` à partir de `.env.exemple`, puis les mêmes variables sur Vercel
+6. Remplacer les données en dur (informations de l'entreprise, adresse d'expédition des e-mails, URL de production)
+7. Déployer sur Vercel, ou héberger sur son propre serveur (le cron de monitoring devra alors être lancé par un autre planificateur, avec l'en-tête `Authorization: Bearer <CRON_SECRET>`)
+
+> [!NOTE]
+> Sur le plan gratuit de Vercel, un cron s'exécute au maximum une fois par jour, à un moment quelconque de l'heure prévue.
 
 ---
 
@@ -402,11 +463,12 @@ Les contributions sont les bienvenues : corriger le code front-end généré par
 - Signaler toute modification de la base de données
 - Utiliser l'IA le moins possible : toute PR entièrement vibe-codée sera refusée
 
-TODO:
+### Feuille de route
 
-- [ ] `app/(panel)/finances/page.tsx`: Replace the date with a date selector
-- [ ] Tabs for clients (implement multi-project)
-- [ ] More monitoring features ?
+- [ ] `app/(panel)/finances/page.tsx` : remplacer la date par un sélecteur de date
+- [ ] Onglets dans l'espace client (clients avec plusieurs projets)
+- [ ] Plus de fonctionnalités de monitoring ?
+- [ ] Implémenter le "last-login" pour suivre les clients.
 
 ---
 

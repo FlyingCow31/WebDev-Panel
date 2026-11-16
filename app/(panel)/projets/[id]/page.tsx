@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { getAvancee, getClient, getProject } from "@/app/lib/data"
 import { Projet } from "@/app/lib/types"
 import { AdminProgression } from "@/app/components/admin/project"
@@ -11,6 +12,9 @@ import TimeEntryModal from "@/app/components/projet/TimeEntryModal"
 import Avancee from "@/app/components/projet/avancee/Avancee"
 import FinishButton from "@/app/components/projet/FinishButton"
 import { ProjectPageSkeleton } from "@/app/components/LoadingSkeletons"
+import { notFound } from "next/navigation"
+
+export const metadata: Metadata = { title: "Projet" }
 
 export default async function ProjetPage({ params }: { params: Promise<{ id: number }> }) {
      return (
@@ -29,18 +33,19 @@ function PriceCalculation(projet: Projet) {
      const tps = tpsnnrem + tpsrem
 
      if (tps === 0) {
-          return 0
+          return price / 100
      }
 
      const tauxh = Math.ceil(price / (tps / 60) / 100)
 
      return tauxh
 }
-async function Timestamp(deadlineDate: Date) {
+async function Timestamp(deadlineDate: Date | null) {
      "use cache"
      cacheLife("days")
      const today = new Date().setHours(0, 0, 0, 0)
-     const deadlineDay = new Date(deadlineDate).setHours(0, 0, 0, 0)
+     const deadlineDay =
+          deadlineDate == null ? new Date().setHours(0, 0, 0, 0) : new Date(deadlineDate).setHours(0, 0, 0, 0)
 
      // Convert the difference from milliseconds to days (24 × 60 × 60 × 1,000).
      const jours = Math.ceil((deadlineDay - today) / 86_400_000)
@@ -51,16 +56,19 @@ export async function ProjetPageContent({ params }: { params: Promise<{ id: numb
      await CheckRedirect()
      const { id } = await params
 
-     const projet = (await getProject(id)) as Projet
+     const projet = await getProject(id)
+     if (!projet) notFound()
      const avancees = await getAvancee(id)
      const client = await getClient(projet.client_id)
 
      const latestAv = [...avancees].sort((a, b) => b.avancee_date.getTime() - a.avancee_date.getTime())[0]
 
-     const deadlineDate = projet.proj_deadline ?? new Date(latestAv.avancee_date.getTime() + 7 * 24 * 60 * 60 * 1000)
+     const deadlineDate =
+          projet.proj_deadline ??
+          (latestAv ? new Date(latestAv.avancee_date.getTime() + 7 * 24 * 60 * 60 * 1000) : null)
 
-     const deadline = deadlineDate.toLocaleDateString("fr-FR")
-     const jours = await Timestamp(deadlineDate)
+     const deadline = deadlineDate?.toLocaleDateString("fr-FR") ?? null
+     const jours = await Timestamp(deadlineDate ?? null)
      return (
           <>
                <header className="flex flex-col gap-3.5">

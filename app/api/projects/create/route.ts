@@ -9,7 +9,7 @@ import z from "zod"
 const projectSchema = z.object({
      clientId: z.number().nonoptional(),
      projectName: z.string().min(1).max(255).nonempty(),
-     deadline: z.string().nonempty(),
+     deadline: z.string().nullable().optional(),
      type: z.string().nonempty(),
      price: z.number().nonoptional(),
      infos: z

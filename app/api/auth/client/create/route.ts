@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
                const user = await sql`SELECT * FROM utilisateur WHERE client_id = ${client.client_id}`
 
                if (user[0]) {
-                    return NextResponse.json({ status: 200 })
+                    return NextResponse.json({ status: 200, client_id: client.client_id })
                }
 
                // * If no user, proceed to creating it

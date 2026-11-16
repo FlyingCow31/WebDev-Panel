@@ -1,9 +1,12 @@
+import type { Metadata } from "next"
 import { GetAvanceesClient, GetClient, GetDocumentsClient } from "../lib/client"
 import { redirect } from "next/navigation"
 import { DocumentSection, Progression, StepTable } from "../components/client/project"
 import { Suspense } from "react"
 import LogoutButton from "../components/root/LogoutButton"
 import { ClientPageSkeleton } from "../components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Mon espace" }
 
 export default function ClientPage() {
      return (

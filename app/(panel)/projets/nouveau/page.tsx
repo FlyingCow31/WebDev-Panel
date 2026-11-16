@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -6,6 +7,8 @@ import { getClients } from "@/app/lib/data"
 import NewProjectForm from "@/app/components/admin/projets/NewProjectForm"
 import { Client } from "@/app/lib/types"
 import { NewProjectFormSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Nouveau projet" }
 
 export default function NouveauProjetPage() {
      return (

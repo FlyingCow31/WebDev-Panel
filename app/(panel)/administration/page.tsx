@@ -1,9 +1,12 @@
+import type { Metadata } from "next"
 import Clauses, { InfoEntreprise } from "@/app/components/administration/clause"
 import ClauseModal from "@/app/components/administration/ClauseModal"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getClauses } from "@/app/lib/data"
 import { Suspense } from "react"
 import { AdministrationPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Administration" }
 
 const company = [
      { label: "Nom", value: "GAEL TOURNIER EI", strong: true },

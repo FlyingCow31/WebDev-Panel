@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import Link from "next/link"
 import { getClients, getProjects } from "@/app/lib/data"
@@ -10,6 +11,8 @@ import DownloadButton from "@/app/components/documents/DownloadButton"
 import DeleteDocument from "@/app/components/documents/DeleteDocument"
 import UploadDocumentModal from "@/app/components/documents/UploadDocumentModal"
 import { ClientsPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Clients" }
 
 type ClientDocument = {
      document_id: number
@@ -47,6 +50,14 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
 
      const filteredClients = clients.filter((c) => c.client_bus.toLowerCase().includes(query.toLowerCase()))
      const current = clients.find((c) => c.client_id === Number(clientId)) ?? filteredClients[0] ?? clients[0]
+     if (!current) {
+          return (
+               <section className="card flex flex-col gap-2">
+                    <h2 className="card-title">Aucun client pour l&apos;instant</h2>
+                    <p className="muted m-0">Créez votre premier client avec le bouton « + Nouveau client ».</p>
+               </section>
+          )
+     }
 
      const activeProjects = projects.filter((p) => p.client_id === current.client_id)
 
@@ -124,7 +135,7 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                                              href={`/projets/${p.proj_id}`}
                                              className="item flex min-w-0 items-center justify-between gap-2.5 text-ink no-underline"
                                         >
-                                             <strong className="min-w-0 break-words [overflow-wrap:anywhere]">{p.proj_nom}</strong>
+                                             <strong className="min-w-0 wrap-break-word">{p.proj_nom}</strong>
                                              <span className="pill pill-client">Accèder au projet</span>
                                         </Link>
                                    )

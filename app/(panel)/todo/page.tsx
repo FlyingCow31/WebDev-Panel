@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getClients, getProjects, getTodos } from "@/app/lib/data"
 import CreateTodoButton from "@/app/components/todo/TodoCreate"
@@ -5,6 +6,8 @@ import TodoBoard from "@/app/components/todo/TodoBoard"
 import { connection } from "next/server"
 import { Suspense } from "react"
 import { TodoPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Todo" }
 
 export default function TodoPage() {
      return (

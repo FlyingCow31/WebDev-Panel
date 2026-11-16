@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getProjects, getSites } from "@/app/lib/data"
 import type { Site, SiteScores } from "@/app/lib/types"
@@ -6,6 +7,8 @@ import CheckButton from "@/app/components/monitoring/CheckButton"
 import DeleteSite from "@/app/components/monitoring/DeleteSite"
 import { Suspense } from "react"
 import { MonitoringPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Monitoring" }
 
 const scoreColumns: { key: keyof SiteScores; label: string }[] = [
      { key: "performance", label: "Perf." },

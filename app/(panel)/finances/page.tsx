@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import InvoiceModal from "@/app/components/finances/InvoiceModal"
 import MarkPaidButton from "@/app/components/finances/MarkPaidButton"
 import ExpenseModal from "@/app/components/finances/ExpenseModal"
@@ -7,6 +8,8 @@ import Link from "next/link"
 import { connection } from "next/server"
 import { Suspense } from "react"
 import { FinancesPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Finances" }
 
 export default function FinancesPage() {
      return (
@@ -37,7 +40,7 @@ export async function FinancesPageContent() {
           { label: "Bénéfice estimé", value: `${(ca - (ca * 20) / 100) / 100 - dep} €`, tone: "" },
           {
                label: "Taux horaire moyen",
-               value: `${((ca - (ca * 20) / 100) / 100 / (txh / 60)).toFixed(1)}€ / h`,
+               value: `${txh == 0 ? ca / 100 : ((ca - (ca * 20) / 100) / 100 / (txh / 60)).toFixed(1)}€ / h`,
                tone: "bg-main text-white",
           },
      ]

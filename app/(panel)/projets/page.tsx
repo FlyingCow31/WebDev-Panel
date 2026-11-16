@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import Link from "next/link"
 import { CheckRedirect } from "@/app/lib/auth/auth"
@@ -6,6 +7,8 @@ import { Avancee, Client, Projet } from "@/app/lib/types"
 import DeleteButton from "@/app/components/projet/DeleteButton"
 import ContinueButton from "@/app/components/projet/ContinueButton"
 import { ProjectFilterSkeleton, ProjectsPageSkeleton } from "@/app/components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Projets" }
 
 type Status = "late" | "en_cours" | "attente_client" | "planifie"
 

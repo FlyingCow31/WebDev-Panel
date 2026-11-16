@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { CheckRedirect } from "../lib/auth/auth"
 import { Suspense } from "react"
@@ -7,6 +8,8 @@ import { formatTitle, TranslateAI } from "./projets/page"
 import { createDeadlines } from "./administration/page"
 import DashboardTodos from "../components/todo/DashboardTodos"
 import { DashboardSkeleton } from "../components/LoadingSkeletons"
+
+export const metadata: Metadata = { title: "Accueil" }
 
 export default function HomePage() {
      return (
