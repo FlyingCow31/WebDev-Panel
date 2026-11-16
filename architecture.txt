@@ -1,0 +1,49 @@
+TODO: 
+- Page / monitoring sites clients (UPTIME, lighthous, tests des formulaires ?,  )
+
+- Page /finance financière: Miroir des factures, suivi des impayés, dashboard CA, calculs des impots et tout, dates d'ursaff, stockage des factures et des devis.
+
+- Page /projects projet: Détails du projet, ajouter une nouvelle tache qui envoie un email, ajouter un document, time tracking (facturable/non-facturable), informations (style accès SSH, stack techniques, host, etc.), calcul sur la base d'un TJM, rentabilité par client, suivi des délais (relance par mail automatique, mail pour demander un avis google, etc.)
+
+- Page /projects/[projectNo]/client cliente : détails du client, délais de paiement, CA cumulé et derniere activité. 
+
+- Espace /legal administration: Infos sur ma micro-entreprise, bibliothèque de clauses à rajouter, informations complémentaires. 
+
+- Espace /todo Todo list: espace avec rappels et tout
+
+
+PLUS TARD: Facturation electronique avec SuperPdP, copier Indy mais rajouter abonnements récurrents 
+
+
+# 1 Description
+
+Cette application veut mettre en lien les clients et l'entrepreneur pour facilité le suivit d'une commande. Elle se décompose en deux partie:
+1. La partie Cliente : Un client a accès à son projet en cours sur son portail client, il y voit les avancées de sa commande créés par le développeur. Chaque client est identifié par un numéro, un email et un mot de passe. Un projet lui est assigné par son numéro et le projet contient un nom de projet, un numéro d'identification, un array d'objets (les avancées), une deadline, un array d'objet (informations), une case temps rémunéré, une case temps non rémunéré, un prix.
+Les avancées sont composées d'un titre, d'un conditionnel Erreur, d'un message d'erreur si l'erreur est true, d'une date et d'un conditionnel planifiée, ainsi que la date de création. 
+Les informations sont composées d'une clé (texte, 0-100 char) et d'une valeur à cette clé de texte (0 - 255 char). 
+
+2 - la partie administrateur: 
+cinq pages administrateur dont : 
+
+Une page projet qui récupére les informations du projet , les affiches et fait des calculs avec pour la rentabilité, le chiffre d'affaire et les heures. 
+Une modale affiche les informations. Une modale permet d'ajouter du temps de travail rémunéré ou non rémunéré. Une modale permet de créer une nouvelle avancée avec les paramètres listés ci dessus. Une fois validée, cette avancée apparait sur les deux pannels et un mail est envoyé au client via un sous-domaine mail pour éviter le flag spam. 
+
+Une page todo qui regroupe un espace avec les rappels. 
+La todo est composée d'un state de la checkbox, d'une clé (texte 0 - 110 char) et d'une deadline (jj/mm/aaaa/hh/mm), qui une fois dépassée envoie un rappel en notification ou par mail via un sous-domaine pour éviter le flag spam.
+
+Une page legal qui regroupe des informations hardcodées et une bibliothèque de clauses. 
+La bibliothèque de clause est composée de clauses qui prennent une clé (texte 0 - 110 char) et un texte (0 - 1024 char) modifiable ou copiable. A la modification cela fait apparaitre une modale avec l'option pour la supprimer. 
+Une div de la page est réservée au calendrier URSAFF qui est hardcodé : une fois par mois le 03 du mois, un rappel pour la déclaration est intégré. Dans le futur, la déclaration de revenus sera intégrée. 
+
+Une modale cliente accessible en cliquant sur la personne depuis la page projet, cela ouvre une modale. 
+Les informations clientes sont composées d'un numéro client (000001 ++ ), d'un nom et d'un prénom (text 0 - 110), d'une entreprise (text 0-110), d'un siret (entier big int), de la date de création de la fiche, de différents contact (texte 0 - 110 char) sans clé et d'une adresse ainsi que d'une partie pour écrire des notes. Possibilité d'évolution en rajoutant des statistiques sur le client (CA global, projects, etc.)
+
+Une page finance qui regroupe tous les éléments financiers de l'entreprise en général. 
+Une div qui regroupe des <a></a> vers des factures. Les factures sont enregistrées dans une modale et sont enregistrées sous un numéro de facture (texte FAaaammjj-9),
+avec un montant total (int), un temps estimé (int) qui sera classé comme temps rémunéré dans la partie projet. Du temps non rémunéré peut ensuite être ajouté. Un client est lié à la facture pour faire les liens entre les montants et les heures mais ne sera pas montré sur cette page. Une deadline de paiement pour le client (date jj/mm/aaaa). Un lien vers la facture (texte download https://). Dans le futur des évolutions peuvent être faites sur la deadline qui est montrée sur le panel du client. Les factures sont ajoutées manuellement dans l'espace projet pour ajouter un document.
+
+Une page monitoring qui détaille les projets clients que gère. 
+Les sites envoient la data à mon panel qui les affiche. 
+Score Lighthouse stocké en JSON, vérification d'uptime stocké en true/false, formulaires stockés en true/fakse. 
+
+Page Index qui fait un récapitulatif des datas qui sont déja stockées. 

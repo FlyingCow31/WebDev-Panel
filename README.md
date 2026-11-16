@@ -59,27 +59,27 @@ Le backend a été réalisé à 95 % à la main, à l'aide de la documentation, 
 
 Les étapes sont définies en dur dans `app/lib/steps.ts` :
 
-| Type          | Étapes                                                      |
-| ------------- | ----------------------------------------------------------- |
+| Type          | Étapes                                                       |
+| ------------- | ------------------------------------------------------------ |
 | `site`        | Démarrage, Développement, Référencement (SEO), Mise en ligne |
-| `maintenance` | Diagnostic, Intervention, Vérification                      |
+| `maintenance` | Diagnostic, Intervention, Vérification                       |
 
 ---
 
 ## Stack
 
-| Domaine          | Outil                                   |
-| ---------------- | --------------------------------------- |
-| Framework        | Next.js 16 (App Router, Cache Components) |
-| Langage          | TypeScript                              |
-| UI               | React 19                                |
-| Style            | Tailwind CSS v4                         |
-| Base de données  | PostgreSQL (Neon, `@neondatabase/serverless`) |
+| Domaine          | Outil                                                       |
+| ---------------- | ----------------------------------------------------------- |
+| Framework        | Next.js 16 (App Router, Cache Components)                   |
+| Langage          | TypeScript                                                  |
+| UI               | React 19                                                    |
+| Style            | Tailwind CSS v4                                             |
+| Base de données  | PostgreSQL (Neon, `@neondatabase/serverless`)               |
 | Authentification | JWT en cookie httpOnly (`jsonwebtoken`, `jose`), `bcryptjs` |
-| Validation       | Zod                                     |
-| Rate limiting    | Upstash Redis                           |
-| E-mails          | Nodemailer (SMTP)                       |
-| Hébergement      | Vercel                                  |
+| Validation       | Zod                                                         |
+| Rate limiting    | Upstash Redis                                               |
+| E-mails          | Nodemailer (SMTP)                                           |
+| Hébergement      | Vercel                                                      |
 
 ---
 
@@ -90,6 +90,7 @@ Les étapes sont définies en dur dans `app/lib/steps.ts` :
 - Une base PostgreSQL (Neon)
 - Une base Upstash Redis
 - Un compte SMTP pour l'envoi des e-mails
+- Clé API Google (optionnel)
 
 ---
 
@@ -102,13 +103,13 @@ npm install
 cp .env.exemple .env
 ```
 
+Ne pas oublier de créer un compte vercel, de déployer Neon, Vercel Blob et redis.
+
 Remplir le fichier `.env` (voir ci-dessous), créer les tables (voir [Base de données](#base-de-données)), puis lancer le serveur de développement :
 
 ```bash
 npm run dev
 ```
-
-Le panel est accessible sur [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -116,23 +117,23 @@ Le panel est accessible sur [http://localhost:3000](http://localhost:3000).
 
 Toutes les variables sont listées dans [`.env.exemple`](./.env.exemple).
 
-| Variable                      | Rôle                                                    |
-| ----------------------------- | ------------------------------------------------------- |
-| `DATABASE_URL`                | URL de connexion à la base Neon                         |
-| `DATABASE_URL_POOLED`         | URL poolée de la base Neon (facultative)                |
+| Variable                      | Rôle                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| `DATABASE_URL`                | URL de connexion à la base Neon                               |
+| `DATABASE_URL_POOLED`         | URL poolée de la base Neon (facultative)                      |
 | `JWT_SECRET`                  | Clé secrète de signature des JWT (chaîne longue et aléatoire) |
-| `JWT_EXPIRES_IN`              | Durée de validité du JWT, en secondes                   |
-| `KV_REST_API_URL`             | URL de l'API REST Upstash                               |
-| `KV_REST_API_TOKEN`           | Token de l'API REST Upstash                             |
-| `KV_REST_API_READ_ONLY_TOKEN` | Token Upstash en lecture seule                          |
-| `KV_URL`                      | URL Upstash (fournie par l'intégration Vercel)          |
-| `REDIS_URL`                   | URL Redis pour le rate limiting                         |
-| `SMTP_HOST`                   | Serveur SMTP                                            |
-| `SMTP_PORT`                   | Port SMTP (465 en général)                              |
-| `SMTP_USER`                   | Utilisateur SMTP (souvent l'adresse e-mail)             |
-| `SMTP_PASS`                   | Mot de passe SMTP                                       |
-| `PRIV_EMAIL`                  | Adresse d'expédition des e-mails                        |
-| `NEXT_PUBLIC_APP_URL`         | URL de l'application (dépréciée)                        |
+| `JWT_EXPIRES_IN`              | Durée de validité du JWT, en secondes                         |
+| `KV_REST_API_URL`             | URL de l'API REST Upstash                                     |
+| `KV_REST_API_TOKEN`           | Token de l'API REST Upstash                                   |
+| `KV_REST_API_READ_ONLY_TOKEN` | Token Upstash en lecture seule                                |
+| `KV_URL`                      | URL Upstash (fournie par l'intégration Vercel)                |
+| `REDIS_URL`                   | URL Redis pour le rate limiting                               |
+| `SMTP_HOST`                   | Serveur SMTP                                                  |
+| `SMTP_PORT`                   | Port SMTP (465 en général)                                    |
+| `SMTP_USER`                   | Utilisateur SMTP (souvent l'adresse e-mail)                   |
+| `SMTP_PASS`                   | Mot de passe SMTP                                             |
+| `PRIV_EMAIL`                  | Adresse d'expédition des e-mails                              |
+| `NEXT_PUBLIC_APP_URL`         | URL de l'application (dépréciée)                              |
 
 > Ne jamais versionner le fichier `.env`.
 
@@ -141,6 +142,7 @@ Toutes les variables sont listées dans [`.env.exemple`](./.env.exemple).
 ## Base de données
 
 Le schéma suit une conception MERISE (dictionnaire de données, MCD, MLD). Les montants sont stockés en centimes et les durées en minutes.
+Le schéma MERISE est inclu dans le repo.
 
 | Table         | Contenu                                                  |
 | ------------- | -------------------------------------------------------- |
@@ -157,17 +159,17 @@ Le schéma suit une conception MERISE (dictionnaire de données, MCD, MLD). Les 
 
 ### Suppressions en cascade
 
-| Lien                      | Règle      | Effet                                              |
-| ------------------------- | ---------- | -------------------------------------------------- |
-| `client` → `utilisateur`  | `CASCADE`  | Supprimer un client supprime son compte            |
-| `client` → `projet`       | `RESTRICT` | Impossible de supprimer un client qui a des projets |
-| `projet` → `document`     | `CASCADE`  | Les documents sont supprimés avec le projet        |
-| `projet` → `avancee`      | `CASCADE`  | Les avancées sont supprimées avec le projet        |
-| `projet` → `site`         | `CASCADE`  | Le site surveillé est supprimé avec le projet      |
-| `projet` → `facture`      | `RESTRICT` | Impossible de supprimer un projet qui a des factures |
-| `projet` → `todo`         | `SET NULL` | La tâche reste, sans projet                        |
-| `projet` → `depense`      | `SET NULL` | La dépense reste, sans projet                      |
-| `document` → `avancee`    | `SET NULL` | L'avancée reste, sans document                     |
+| Lien                     | Règle      | Effet                                                |
+| ------------------------ | ---------- | ---------------------------------------------------- |
+| `client` → `utilisateur` | `CASCADE`  | Supprimer un client supprime son compte              |
+| `client` → `projet`      | `RESTRICT` | Impossible de supprimer un client qui a des projets  |
+| `projet` → `document`    | `CASCADE`  | Les documents sont supprimés avec le projet          |
+| `projet` → `avancee`     | `CASCADE`  | Les avancées sont supprimées avec le projet          |
+| `projet` → `site`        | `CASCADE`  | Le site surveillé est supprimé avec le projet        |
+| `projet` → `facture`     | `RESTRICT` | Impossible de supprimer un projet qui a des factures |
+| `projet` → `todo`        | `SET NULL` | La tâche reste, sans projet                          |
+| `projet` → `depense`     | `SET NULL` | La dépense reste, sans projet                        |
+| `document` → `avancee`   | `SET NULL` | L'avancée reste, sans document                       |
 
 ### Script de création
 
@@ -347,15 +349,15 @@ app/
 
 ## Routes API
 
-| Domaine        | Routes                                                                 |
-| -------------- | ---------------------------------------------------------------------- |
-| Authentification | `auth/login`, `auth/logout`                                          |
-| Utilisateurs   | `auth/client/create`, `auth/client/delete`, `auth/user/modify`, `auth/user/delete` |
-| Projets        | `projects/create`, `projects/delete`, `projects/modify/finish`         |
-| Avancées       | `projects/avancee/create`, `projects/avancee/delete`                   |
-| Finances       | `finances/facture/create`, `finances/facture/pay`, `finances/depense/create` |
-| Clauses        | `clauses/create`                                                       |
-| Todo           | `todo/create`, `todo/modify`, `todo/delete`                            |
+| Domaine          | Routes                                                                             |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| Authentification | `auth/login`, `auth/logout`                                                        |
+| Utilisateurs     | `auth/client/create`, `auth/client/delete`, `auth/user/modify`, `auth/user/delete` |
+| Projets          | `projects/create`, `projects/delete`, `projects/modify/finish`                     |
+| Avancées         | `projects/avancee/create`, `projects/avancee/delete`                               |
+| Finances         | `finances/facture/create`, `finances/facture/pay`, `finances/depense/create`       |
+| Clauses          | `clauses/create`                                                                   |
+| Todo             | `todo/create`, `todo/modify`, `todo/delete`                                        |
 
 Toutes les routes sont préfixées par `/api/`.
 
@@ -399,6 +401,12 @@ Les contributions sont les bienvenues : corriger le code front-end généré par
 - Documenter clairement les changements
 - Signaler toute modification de la base de données
 - Utiliser l'IA le moins possible : toute PR entièrement vibe-codée sera refusée
+
+TODO:
+
+- [ ] `app/(panel)/finances/page.tsx`: Replace the date with a date selector
+- [ ] Tabs for clients (implement multi-project)
+- [ ] More monitoring features ?
 
 ---
 
