@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache"
 import { sql } from "./db"
-import { Avancee, Clause, Client, Depense, Invoice, Projet, Todo } from "./types"
+import { Avancee, Clause, Client, Depense, Invoice, Projet, Site, Todo } from "./types"
 
 function isProjectInfo(value: unknown): value is NonNullable<Projet["proj_info"]> {
      return (
@@ -137,4 +137,27 @@ export async function getClient(client_id: number): Promise<Client> {
      const client = (await sql`SELECT * FROM client WHERE client_id = ${client_id}`) as Client[]
 
      return client[0] as Client
+}
+
+export async function getSites(): Promise<Site[]> {
+     "use cache"
+     cacheLife("hours")
+     cacheTag("sites")
+
+     return (await sql`
+          SELECT s.*,
+               p.proj_nom,
+               COALESCE(c.client_bus, c.client_pren || ' ' || c.client_nom) AS client_label,
+               (s.site_ssl_expires_at - CURRENT_DATE) AS ssl_days_left,
+               (s.site_checked_at IS NOT NULL AND (
+                    s.site_ssl_expires_at IS NULL
+                    OR s.site_ssl_expires_at - CURRENT_DATE < 14
+                    OR (s.site_lighthouse->>'sslValid')::boolean IS FALSE
+                    OR s.site_lighthouse ? 'errors'
+               )) AS in_alert
+          FROM site s
+          JOIN projet p ON p.proj_id = s.proj_id
+          JOIN client c ON c.client_id = p.client_id
+          ORDER BY s.site_domain ASC
+     `) as Site[]
 }

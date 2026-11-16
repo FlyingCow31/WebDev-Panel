@@ -3,7 +3,15 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export default function NavLinks({ projectNb, todosNb }: { projectNb: number; todosNb: number }) {
+export default function NavLinks({
+     projectNb,
+     todosNb,
+     alertsNb,
+}: {
+     projectNb: number
+     todosNb: number
+     alertsNb: number
+}) {
      const pathname = usePathname()
      const links = [
           { href: "/", label: "Accueil" },
@@ -12,8 +20,7 @@ export default function NavLinks({ projectNb, todosNb }: { projectNb: number; to
           { href: "/todo", label: "Todo", count: todosNb },
           { href: "/finances", label: "Finances" },
           { href: "/administration", label: "Administration" },
-          // TODO: Add this when the error handling has been implemented.
-          { href: "/monitoring", label: "Monitoring", count: 1, alert: true },
+          { href: "/monitoring", label: "Monitoring", count: alertsNb || undefined, alert: alertsNb > 0 },
      ]
 
      return (

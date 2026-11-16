@@ -102,3 +102,30 @@ export type NextSummary = {
      nbNext: number
      titleNext: string
 }
+
+export type SiteScores = {
+     performance: number | null
+     accessibility: number | null
+     bestPractices: number | null
+     seo: number | null
+}
+
+export type SiteReport = {
+     scores?: SiteScores
+     sslValid?: boolean
+     strategy?: "mobile"
+     errors?: { ssl?: string; lighthouse?: string }
+}
+
+export type Site = {
+     site_id: number
+     proj_id: number
+     site_domain: string
+     site_ssl_expires_at: Date | null
+     site_lighthouse: SiteReport | null
+     site_checked_at: Date | null
+     proj_nom: string
+     client_label: string
+     ssl_days_left: number | null
+     in_alert: boolean
+}
