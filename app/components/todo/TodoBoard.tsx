@@ -2,8 +2,8 @@
 
 import { Client, Projet, Todo } from "@/app/lib/types"
 import { useMemo, useState } from "react"
-import { DeleteTodo } from "@/app/components/admin/projets/DeleteButton"
-import { TodoParent } from "@/app/components/admin/todo/TodoBox"
+import { DeleteTodo } from "@/app/components/projet/DeleteButton"
+import { TodoParent } from "@/app/components/todo/TodoBox"
 
 export default function TodoBoard({
      todos: initialTodos,
@@ -33,19 +33,14 @@ export default function TodoBoard({
           () =>
                todos.filter(
                     (t) =>
-                         !t.todo_done &&
-                         new Date(t.todo_due) >= startOfToday &&
-                         new Date(t.todo_due) < startOfTomorrow,
+                         !t.todo_done && new Date(t.todo_due) >= startOfToday && new Date(t.todo_due) < startOfTomorrow,
                ),
           [todos, startOfToday, startOfTomorrow],
      )
      const dueWeek = useMemo(
           () =>
                todos.filter(
-                    (t) =>
-                         !t.todo_done &&
-                         new Date(t.todo_due) >= startOfTomorrow &&
-                         new Date(t.todo_due) <= endOfWeek,
+                    (t) => !t.todo_done && new Date(t.todo_due) >= startOfTomorrow && new Date(t.todo_due) <= endOfWeek,
                ),
           [todos, startOfTomorrow, endOfWeek],
      )
@@ -71,7 +66,9 @@ export default function TodoBoard({
                     <h2 className="section-title mb-1">
                          Aujourd&apos;hui
                          {dueToday.length > 0 && (
-                              <span className="font-sans text-base font-medium text-muted">{" " + dueToday.length} à faire</span>
+                              <span className="font-sans text-base font-medium text-muted">
+                                   {" " + dueToday.length} à faire
+                              </span>
                          )}
                          {late.length > 0 && (
                               <span className="font-sans text-base font-medium text-red-900">
@@ -97,7 +94,9 @@ export default function TodoBoard({
                     <h2 className="section-title mb-1">
                          Cette semaine
                          {dueWeek.length > 0 && (
-                              <span className="font-sans text-base font-medium text-muted">{" " + dueWeek.length} à faire</span>
+                              <span className="font-sans text-base font-medium text-muted">
+                                   {" " + dueWeek.length} à faire
+                              </span>
                          )}
                     </h2>
                     {dueWeek.length === 0 && (
@@ -118,7 +117,9 @@ export default function TodoBoard({
                     <h2 className="section-title mb-1">
                          Plus tard
                          {due.length > 0 && (
-                              <span className="font-sans text-base font-medium text-muted">{" " + due.length} à faire</span>
+                              <span className="font-sans text-base font-medium text-muted">
+                                   {" " + due.length} à faire
+                              </span>
                          )}
                     </h2>
                     {due.length === 0 && (
@@ -139,7 +140,10 @@ export default function TodoBoard({
                     <h2 className="section-title mb-1">Terminées</h2>
                     <div className="item flex flex-wrap items-center gap-x-2.5 py-2.5">
                          {completed.map((todo) => (
-                              <div key={todo.todo_id} className="item flex flex-wrap items-center gap-x-3.5 gap-y-2.5 py-2.5">
+                              <div
+                                   key={todo.todo_id}
+                                   className="item flex flex-wrap items-center gap-x-3.5 gap-y-2.5 py-2.5"
+                              >
                                    <label className="flex min-h-8 flex-fill items-center gap-3 text-muted line-through">
                                         {todo.todo_title}
                                    </label>
@@ -147,7 +151,8 @@ export default function TodoBoard({
                                         {clients.find(
                                              (client) =>
                                                   client.client_id ===
-                                                  projects.find((project) => project.proj_id === todo.proj_id)?.client_id,
+                                                  projects.find((project) => project.proj_id === todo.proj_id)
+                                                       ?.client_id,
                                         )?.client_bus || "Aucun!"}
                                    </span>
                                    <span className="text-caption font-bold muted line-through">

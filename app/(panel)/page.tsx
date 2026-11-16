@@ -5,7 +5,7 @@ import { getAvancees, getProjects, getTodos } from "../lib/data"
 import { Avancee, Projet, NextSummary } from "../lib/types"
 import { formatTitle, TranslateAI } from "./projets/page"
 import { createDeadlines } from "./administration/page"
-import DashboardTodos from "../components/admin/todo/DashboardTodos"
+import DashboardTodos from "../components/todo/DashboardTodos"
 
 export default function HomePage() {
      // TODO : Integrate a loading skeletton

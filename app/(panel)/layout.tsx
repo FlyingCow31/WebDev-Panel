@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 import NavList from "../components/NavList"
 import { WaitingNavLinks } from "../components/NavLinks"
+import LogoutButton from "../components/root/LogoutButton"
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
      return (
@@ -19,9 +20,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                          <NavList />
                     </Suspense>
                     <hr className="my-3 hidden border-0 border-t-2 border-ink lg:block" />
-                    <button type="button" className="nav-link muted hidden font-medium lg:flex">
-                         Se déconnecter
-                    </button>
+                    <LogoutButton />
                </aside>
                <main className="flex min-w-0 flex-1 flex-col gap-6 lg:gap-7">{children}</main>
           </div>

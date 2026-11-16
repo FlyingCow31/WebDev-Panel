@@ -3,7 +3,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { AuthUser } from "@/app/lib/auth/auth"
 import { getClients } from "@/app/lib/data"
-import NewProjectForm from "@/app/components/admin/projets/NewProjectForm"
+import NewProjectForm from "@/app/components/projet/NewProjectForm"
 import { Client } from "@/app/lib/types"
 
 export default function NouveauProjetPage() {

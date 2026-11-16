@@ -104,7 +104,6 @@ export async function ProjetPageContent({ params }: { params: Promise<{ id: numb
                     </div>
                </header>
 
-               {/* // TODO: Implement deletion of avancee */}
                {avancees[0] && (
                     <section aria-label="Étapes" className="card">
                          <AdminProgression avancee={avancees} type={projet.proj_type} />

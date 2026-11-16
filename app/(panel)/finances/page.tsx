@@ -1,6 +1,6 @@
 import InvoiceModal from "@/app/components/finances/InvoiceModal"
 import MarkPaidButton from "@/app/components/finances/MarkPaidButton"
-import ExpenseModal from "@/app/components/admin/finances/ExpenseModal"
+import ExpenseModal from "@/app/components/finances/ExpenseModal"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getDepenses, getInvoices, getProjects } from "@/app/lib/data"
 import Link from "next/link"

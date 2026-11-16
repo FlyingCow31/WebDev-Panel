@@ -1,7 +1,7 @@
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getClients, getProjects, getTodos } from "@/app/lib/data"
-import CreateTodoButton from "@/app/components/admin/todo/TodoCreate"
-import TodoBoard from "@/app/components/admin/todo/TodoBoard"
+import CreateTodoButton from "@/app/components/todo/TodoCreate"
+import TodoBoard from "@/app/components/todo/TodoBoard"
 import { connection } from "next/server"
 import { Suspense } from "react"
 

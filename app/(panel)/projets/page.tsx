@@ -3,8 +3,8 @@ import Link from "next/link"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getProjects, getAvancees, getClients } from "@/app/lib/data"
 import { Avancee, Client, Projet } from "@/app/lib/types"
-import DeleteButton from "@/app/components/admin/projets/DeleteButton"
-import ContinueButton from "@/app/components/admin/projets/ContinueButton"
+import DeleteButton from "@/app/components/projet/DeleteButton"
+import ContinueButton from "@/app/components/projet/ContinueButton"
 
 type Status = "late" | "en_cours" | "attente_client" | "planifie"
 

@@ -3,7 +3,7 @@
 import { Check, Pencil } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { DeleteAvancee } from "../../admin/projets/DeleteButton"
+import { DeleteAvancee } from "../DeleteButton"
 
 const STATUSES = [
      { value: "en_cours", label: "En cours", pill: "pill-you" },
@@ -18,13 +18,14 @@ type Props = {
      titre: string
      message: string
      date: string
+     visible?: boolean
 }
 
 function displayDate(date: string) {
      return date.split("-").reverse().join("/")
 }
 
-export default function AvanceeCard({ avancee_id, statut, titre, message, date }: Props) {
+export default function AvanceeCard({ avancee_id, statut, titre, message, date, visible }: Props) {
      const router = useRouter()
      const [editing, setEditing] = useState(false)
      const [saving, setSaving] = useState(false)
@@ -67,14 +68,14 @@ export default function AvanceeCard({ avancee_id, statut, titre, message, date }
      }
 
      return (
-          <li className="item flex flex-col gap-2 p-4">
-               <div className="flex flex-wrap items-center gap-2">
+          <li className={`${visible ? "" : "bg-gray-200"} item flex flex-col gap-2 p-4 `}>
+               <div className="flex flex-wrap items-center gap-2 ">
                     {editing ? (
                          <select
                               aria-label="Statut"
                               value={form.statut}
                               onChange={(e) => setForm({ ...form, statut: e.target.value })}
-                              className="field min-h-10 py-0"
+                              className="field min-h-10 py-0 "
                          >
                               {STATUSES.map((s) => (
                                    <option key={s.value} value={s.value}>

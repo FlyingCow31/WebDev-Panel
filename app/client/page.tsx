@@ -1,9 +1,8 @@
-import { GetClient } from "../lib/client"
+import { GetAvanceesClient, GetClient, GetDocumentsClient } from "../lib/client"
 import { redirect } from "next/navigation"
 import { DocumentSection, Progression, StepTable } from "../components/client/project"
-import { Avancee, Document } from "../lib/types"
 import { Suspense } from "react"
-import { sql } from "../lib/db"
+import LogoutButton from "../components/root/LogoutButton"
 
 export default function ClientPage() {
      // TODO : Integrate a loading skeletton
@@ -23,22 +22,10 @@ async function ClientContent() {
 
      // TODO: make this a bit better than just a <p>
      if (!projet) return <p className="p-6">Aucun projet en cours.</p>
+     const avancees = await GetAvanceesClient(projet.proj_id)
+     if (avancees === null) redirect("/login")
 
-     const avancees = (await sql`SELECT avancee_id,
-          avancee_etape,
-          avancee_statut,
-          avancee_titre,
-          avancee_message,
-          avancee_date,
-          avancee_visible_client FROM avancee WHERE proj_id = ${projet.proj_id} `) as Avancee[]
-
-     const documents = (await sql`SELECT document_id,
-     proj_id,
-     document_nom,
-     document_type,
-     document_link,
-     document_visible_client,
-     document_created_at FROM document WHERE proj_id = ${projet.proj_id}`) as Document[]
+     const documents = await GetDocumentsClient(projet.proj_id)
 
      console.log(client)
 
@@ -51,6 +38,10 @@ async function ClientContent() {
                               Bonjour {client?.client_pren} {client?.client_nom}
                          </h1>
                     </div>
+                    <div className="btn ml-auto">
+                         <LogoutButton />
+                    </div>
+
                     <a href="mailto:contact@gaeltournier.dev" className="btn btn-icon shrink-0 sm:w-auto sm:px-5">
                          <svg
                               width="20"
@@ -87,7 +78,7 @@ async function ClientContent() {
                               <h2 id="t-docs" className="section-title">
                                    Vos documents
                               </h2>
-                              <DocumentSection documents={documents} />
+                              <DocumentSection documents={documents ?? []} />
                               <p className="muted m-0 text-sm">Les nouveaux documents apparaitront ici!</p>
                          </section>
 

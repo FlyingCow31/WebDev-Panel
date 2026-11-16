@@ -130,7 +130,6 @@ export function StepTable({ avancee, projet }: ProjectProps) {
      )
 }
 
-// TODO: add download logic
 export function DocumentSection({ documents }: ProjectProps) {
      return (
           <ul className="m-0 flex list-none flex-col gap-3 p-0">
