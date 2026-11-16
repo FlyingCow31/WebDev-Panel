@@ -1,5 +1,6 @@
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { Suspense } from "react"
+import { MonitoringPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 const sites = [
      {
@@ -45,7 +46,7 @@ const legend = [
 ]
 export default function MonitoringPage() {
      return (
-          <Suspense fallback={<p>Chargement...</p>}>
+          <Suspense fallback={<MonitoringPageSkeleton />}>
                <MonitoringPageContent />
           </Suspense>
      )

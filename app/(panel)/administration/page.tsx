@@ -3,6 +3,7 @@ import ClauseModal from "@/app/components/administration/ClauseModal"
 import { CheckRedirect } from "@/app/lib/auth/auth"
 import { getClauses } from "@/app/lib/data"
 import { Suspense } from "react"
+import { AdministrationPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 const company = [
      { label: "Nom", value: "GAEL TOURNIER EI", strong: true },
@@ -49,7 +50,7 @@ const deadlines = [
 ]
 export default function AdminPage() {
      return (
-          <Suspense fallback={<p>Chargement...</p>}>
+          <Suspense fallback={<AdministrationPageSkeleton />}>
                <AdministrationPage />
           </Suspense>
      )

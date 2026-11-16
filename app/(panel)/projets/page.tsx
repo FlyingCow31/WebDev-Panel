@@ -5,6 +5,7 @@ import { getProjects, getAvancees, getClients } from "@/app/lib/data"
 import { Avancee, Client, Projet } from "@/app/lib/types"
 import DeleteButton from "@/app/components/projet/DeleteButton"
 import ContinueButton from "@/app/components/projet/ContinueButton"
+import { ProjectFilterSkeleton, ProjectsPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 type Status = "late" | "en_cours" | "attente_client" | "planifie"
 
@@ -18,7 +19,7 @@ const filters: { id: "all" | Status; label: string }[] = [
 
 export default function ProjetsPage({ searchParams }: { searchParams: Promise<{ statut?: string }> }) {
      return (
-          <Suspense fallback={<p className="p-6">Chargement…</p>}>
+          <Suspense fallback={<ProjectsPageSkeleton />}>
                <ProjetsPageContent searchParams={searchParams} />
           </Suspense>
      )
@@ -43,7 +44,7 @@ export async function ProjetsPageContent({ searchParams }: { searchParams: Promi
                     </Link>
                </header>
 
-               <Suspense fallback={<p>Loading...</p>}>
+               <Suspense fallback={<ProjectFilterSkeleton />}>
                     <FilteredProjects
                          searchParams={searchParams}
                          projects={projects}

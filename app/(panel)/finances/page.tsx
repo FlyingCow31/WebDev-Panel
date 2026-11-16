@@ -6,6 +6,7 @@ import { getDepenses, getInvoices, getProjects } from "@/app/lib/data"
 import Link from "next/link"
 import { connection } from "next/server"
 import { Suspense } from "react"
+import { FinancesPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 const expenses = [
      { label: "Abonnement Vercel Pro", category: "Outils", date: "01/10", amount: "20 €" },
@@ -14,7 +15,7 @@ const expenses = [
 
 export default function FinancesPage() {
      return (
-          <Suspense fallback={<p>Chargement...</p>}>
+          <Suspense fallback={<FinancesPageSkeleton />}>
                <FinancesPageContent />
           </Suspense>
      )

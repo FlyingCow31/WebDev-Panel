@@ -3,6 +3,7 @@ import { getProject } from "@/app/lib/data"
 import { type ProjectType, STEP_TEMPLATES } from "@/app/lib/steps"
 
 import { Suspense } from "react"
+import { AvanceeFormSkeleton } from "@/app/components/LoadingSkeletons"
 
 async function GetEtapes(id: number): Promise<(typeof STEP_TEMPLATES)[ProjectType]> {
      const projet = await getProject(Number(id))
@@ -12,7 +13,7 @@ async function GetEtapes(id: number): Promise<(typeof STEP_TEMPLATES)[ProjectTyp
 
 export default function AvanceePage({ params }: { params: Promise<{ id: number }> }) {
      return (
-          <Suspense fallback={<p>Chargement...</p>}>
+          <Suspense fallback={<AvanceeFormSkeleton />}>
                <AvanceePageContent params={params} />
           </Suspense>
      )

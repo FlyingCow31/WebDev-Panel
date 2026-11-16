@@ -9,6 +9,7 @@ import { sql } from "@/app/lib/db"
 import DownloadButton from "@/app/components/documents/DownloadButton"
 import DeleteDocument from "@/app/components/documents/DeleteDocument"
 import UploadDocumentModal from "@/app/components/documents/UploadDocumentModal"
+import { ClientsPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 type ClientDocument = {
      document_id: number
@@ -27,7 +28,7 @@ export default function ClientsPage({ searchParams }: { searchParams: Promise<{ 
                     <NewClientModal />
                </header>
 
-               <Suspense fallback={<p>Chargement...</p>}>
+               <Suspense fallback={<ClientsPageSkeleton />}>
                     <SelectedClient searchParams={searchParams} />
                </Suspense>
           </>

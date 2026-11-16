@@ -11,6 +11,7 @@ import { CheckRedirect } from "@/app/lib/auth/auth"
 import TimeEntryModal from "@/app/components/projet/TimeEntryModal"
 import Avancee from "@/app/components/projet/avancee/Avancee"
 import FinishButton from "@/app/components/projet/FinishButton"
+import { ProjectPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 const tech = [
      { label: "Hébergement", value: "Vercel" },
@@ -21,7 +22,7 @@ const tech = [
 
 export default async function ProjetPage({ params }: { params: Promise<{ id: number }> }) {
      return (
-          <Suspense fallback={<p>Chargement du projet en cours...</p>}>
+          <Suspense fallback={<ProjectPageSkeleton />}>
                <ProjetPageContent params={params} />
           </Suspense>
      )

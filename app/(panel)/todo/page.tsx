@@ -4,10 +4,11 @@ import CreateTodoButton from "@/app/components/todo/TodoCreate"
 import TodoBoard from "@/app/components/todo/TodoBoard"
 import { connection } from "next/server"
 import { Suspense } from "react"
+import { TodoPageSkeleton } from "@/app/components/LoadingSkeletons"
 
 export default function TodoPage() {
      return (
-          <Suspense fallback={<p>Chargement...</p>}>
+          <Suspense fallback={<TodoPageSkeleton />}>
                <TodoPageContent />
           </Suspense>
      )

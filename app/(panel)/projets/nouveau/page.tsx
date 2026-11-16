@@ -5,6 +5,7 @@ import { AuthUser } from "@/app/lib/auth/auth"
 import { getClients } from "@/app/lib/data"
 import NewProjectForm from "@/app/components/projet/NewProjectForm"
 import { Client } from "@/app/lib/types"
+import { NewProjectFormSkeleton } from "@/app/components/LoadingSkeletons"
 
 export default function NouveauProjetPage() {
      return (
@@ -16,7 +17,7 @@ export default function NouveauProjetPage() {
                     <h1 className="page-title">Nouveau projet.</h1>
                </header>
 
-               <Suspense fallback={<p className="muted m-0">Chargement…</p>}>
+               <Suspense fallback={<NewProjectFormSkeleton />}>
                     <FormWithClients />
                </Suspense>
           </>
