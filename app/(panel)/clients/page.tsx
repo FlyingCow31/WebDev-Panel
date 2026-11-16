@@ -58,8 +58,8 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
           ORDER BY d.document_created_at DESC`) as ClientDocument[]
 
      return (
-          <div className="grid items-start gap-6 lg:gap-7 xl:grid-aside-main">
-               <section aria-label="Liste des clients" className="card flex flex-col gap-3 p-4 md:p-4">
+          <div className="grid w-full min-w-0 items-start gap-6 lg:gap-7 xl:grid-aside-main">
+               <section aria-label="Liste des clients" className="card flex min-w-0 flex-col gap-3 p-4 md:p-4">
                     <label htmlFor="q" className="sr-only">
                          Rechercher un client
                     </label>
@@ -73,7 +73,7 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                               className="field"
                          />
                     </form>
-                    <ul className="m-0 flex list-none gap-2 overflow-x-auto p-0 pb-1 xl:flex-col xl:overflow-visible xl:pb-0">
+                    <ul className="m-0 flex max-w-full list-none gap-2 overflow-x-auto p-0 pb-1 xl:flex-col xl:overflow-visible xl:pb-0">
                          {filteredClients.map((c) => {
                               const active = c.client_id === current.client_id
 
@@ -95,7 +95,7 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                     </ul>
                </section>
 
-               <div className="flex flex-col gap-6">
+               <div className="flex min-w-0 flex-col gap-6">
                     <ClientCard
                          key={current.client_id}
                          client={{
@@ -112,8 +112,8 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                          }}
                     />
 
-                    <div className="grid gap-6 md:grid-cols-2">
-                         <section aria-labelledby="h-cproj" className="card-sm flex flex-col gap-3">
+                    <div className="grid min-w-0 gap-6 md:grid-cols-2">
+                         <section aria-labelledby="h-cproj" className="card-sm flex min-w-0 flex-col gap-3">
                               <h3 id="h-cproj" className="card-title">
                                    Projets
                               </h3>
@@ -122,15 +122,15 @@ async function ClientsView({ clientId, query }: { clientId?: string; query: stri
                                         <Link
                                              key={i}
                                              href={`/projets/${p.proj_id}`}
-                                             className="item flex items-center justify-between gap-2.5 text-ink no-underline"
+                                             className="item flex min-w-0 items-center justify-between gap-2.5 text-ink no-underline"
                                         >
-                                             <strong>{p.proj_nom}</strong>
+                                             <strong className="min-w-0 break-words [overflow-wrap:anywhere]">{p.proj_nom}</strong>
                                              <span className="pill pill-client">Accèder au projet</span>
                                         </Link>
                                    )
                               })}
                          </section>
-                         <section aria-labelledby="h-cdocs" className="card-sm flex flex-col gap-3">
+                         <section aria-labelledby="h-cdocs" className="card-sm flex min-w-0 flex-col gap-3">
                               <h3 id="h-cdocs" className="card-title">
                                    Documents partagés
                               </h3>

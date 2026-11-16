@@ -19,18 +19,20 @@ export default function Page() {
 
           if (response.ok) {
                const data = await response.json()
-               console.log(data.role || "Rien")
+
+               setUsername("")
+               setPassword("")
+               setError("")
+
                // redirection when validating first thing
                if (data.role === "admin") {
                     router.push("/")
                } else {
                     router.push("/client")
                }
-
-               console.log("Logged In!")
           } else {
                const data = await response.json()
-               console.error(data.error)
+
                setError("Mauvais Identifiant ou mot de passe.")
           }
      }

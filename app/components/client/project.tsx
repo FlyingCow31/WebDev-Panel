@@ -19,7 +19,6 @@ export function Progression({ projet, avancee }: ProjectProps) {
           visibleSteps?.find((item) => item.avancee_statut == "attente_client")
      const currentTitle = currentItem?.avancee_etape as string
 
-     // TODO: make the dashed line move
      function timeLineCreation(avancee: Avancee) {
           switch (avancee.avancee_statut) {
                case "termine":
@@ -27,7 +26,7 @@ export function Progression({ projet, avancee }: ProjectProps) {
                case "en_cours":
                     return <div className="seg seg-client" />
                case "planifie":
-                    return <div className="seg seg-todo" />
+                    return <div className="seg seg-todo seg-todo-moving" />
                default:
                     return <div className="seg seg-late" />
           }
@@ -42,8 +41,10 @@ export function Progression({ projet, avancee }: ProjectProps) {
           <>
                <div className="flex flex-wrap items-end justify-between gap-4">
                     <div className="flex flex-col gap-1.5">
-                         <span className="muted text-body-sm font-medium">{projet?.proj_nom.toUpperCase()}</span>
-                         <h2 className="section-title">
+                         <span className="muted text-body-sm font-medium wrap-anywhere">
+                              {projet?.proj_nom.toUpperCase()}
+                         </span>
+                         <h2 className="section-title wrap-anywhere">
                               Étape {stepNumber(projet?.proj_type ?? "site", currentTitle)} sur {stepIndex} -{" "}
                               {stepLabel(projet?.proj_type ?? "site", currentTitle)}
                          </h2>
@@ -92,6 +93,24 @@ export function StepTable({ avancee, projet }: ProjectProps) {
                     return <div className="size-9 border-3 border-ink bg-main shadow-brutal-xs" />
                case "planifie":
                     return <div className="size-8 border-3 border-dashed border-ink bg-white" />
+               case "attente_client":
+                    return (
+                         <div className="relative size-8 bg-colerr">
+                              <svg className="absolute inset-0 size-full" viewBox="0 0 32 32" aria-hidden="true">
+                                   <rect
+                                        className="step-box-waiting-dashes"
+                                        x="1.5"
+                                        y="1.5"
+                                        width="29"
+                                        height="29"
+                                        fill="none"
+                                        stroke="var(--color-ink)"
+                                        strokeWidth="3"
+                                        strokeDasharray="6 4"
+                                   />
+                              </svg>
+                         </div>
+                    )
                default:
                     return <div className="size-8 border-3 border-dashed border-ink bg-colerr" />
           }
@@ -114,14 +133,16 @@ export function StepTable({ avancee, projet }: ProjectProps) {
                                         />
                                    )}
                               </div>
-                              <div className={`flex flex-col gap-2 pt-1 ${i < sortedAvancee.length - 1 ? "pb-7" : ""}`}>
-                                   <span className="text-lg font-bold">{step.avancee_titre}</span>
+                              <div
+                                   className={`flex min-w-0 flex-1 flex-col gap-2 pt-1 ${i < sortedAvancee.length - 1 ? "pb-7" : ""}`}
+                              >
+                                   <span className="text-lg font-bold wrap-anywhere">{step.avancee_titre}</span>
                                    {step.avancee_statut === "attente_client" && (
                                         <span className="pill pill-client self-start whitespace-normal">
                                              Besoin de vous!
                                         </span>
                                    )}
-                                   <span className="muted text-body-sm">{step.avancee_message}</span>
+                                   <span className="muted text-body-sm wrap-anywhere">{step.avancee_message}</span>
                                    {step.document_id && step.document_nom && (
                                         <div className="flex items-center gap-2">
                                              <span className="muted min-w-0 flex-1 truncate text-sm">

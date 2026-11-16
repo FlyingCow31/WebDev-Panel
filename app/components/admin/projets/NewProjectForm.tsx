@@ -61,64 +61,82 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
      const [deadline, setDeadline] = useState<Date | null>(null)
      const [price, setPrice] = useState<number>(0)
      const [errors, setErrors] = useState<string | null>(null)
+     const [submitting, setSubmitting] = useState(false)
+     const [submitPhase, setSubmitPhase] = useState<"client" | "project" | null>(null)
 
      async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
           e.preventDefault()
+          if (submitting) return
+
           setErrors(null)
+          setSubmitting(true)
 
-          let projectClientId = clientId
+          try {
+               let projectClientId = clientId
 
-          if (clientMode === "new") {
-               const response = await fetch(`/api/auth/client/create`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                         client_nom: surname,
-                         client_pren: name,
-                         client_bus: business,
-                         client_contact_mail: contact,
-                    }),
-               })
-               if (!response.ok) {
-                    const errors = await response.json()
-                    return setErrors(errors.error)
-               } else {
+               if (clientMode === "new") {
+                    setSubmitPhase("client")
+                    const response = await fetch(`/api/auth/client/create`, {
+                         method: "POST",
+                         headers: { "Content-Type": "application/json" },
+                         body: JSON.stringify({
+                              client_nom: surname,
+                              client_pren: name,
+                              client_bus: business,
+                              client_contact_mail: contact,
+                         }),
+                    })
+                    if (!response.ok) {
+                         const body = await response.json().catch(() => null)
+                         setErrors(body?.error ?? "Impossible de créer le client.")
+                         return
+                    }
+
                     const data = await response.json()
                     projectClientId = data.client_id
                     setClientId(projectClientId)
                }
-          }
 
-          if (projectClientId === null) {
-               return setErrors("Veuillez sélectionner un client.")
-          }
+               if (projectClientId === null) {
+                    setErrors("Veuillez sélectionner un client.")
+                    return
+               }
 
-          const response = await fetch(`/api/projects/create`, {
-               method: "POST",
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify({
-                    clientId: projectClientId,
-                    projectName,
-                    deadline: deadline?.toISOString() ?? null,
-                    type,
-                    price,
-                    infos,
-               }),
-          })
-          if (!response.ok) {
-               const errors = await response.json()
-               return setErrors(errors.error)
-          }
+               setSubmitPhase("project")
+               const response = await fetch(`/api/projects/create`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                         clientId: projectClientId,
+                         projectName,
+                         deadline: deadline?.toISOString() ?? null,
+                         type,
+                         price,
+                         infos,
+                    }),
+               })
+               if (!response.ok) {
+                    const body = await response.json().catch(() => null)
+                    setErrors(body?.error ?? "Impossible de créer le projet.")
+                    return
+               }
 
-          const data = await response.json()
-          router.push(`/projets/${data.proj_id}`)
+               const data = await response.json()
+               router.push(`/projets/${data.proj_id}`)
+          } catch (error) {
+               console.error("Project creation failed:", error)
+               setErrors("Erreur réseau. Impossible de créer le projet.")
+          } finally {
+               setSubmitting(false)
+               setSubmitPhase(null)
+          }
      }
 
-     // TODO: Add a loading state
      return (
           <form
                onSubmit={handleSubmit}
                aria-label="Nouveau projet"
+               aria-busy={submitting}
                className="grid items-start gap-6 lg:gap-7 xl:grid-main-aside"
           >
                <input type="hidden" name="client_mode" value={clientMode} />
@@ -394,10 +412,52 @@ export default function NewProjectForm({ clients }: { clients: Client[] }) {
                                    <p className="text-red-900">{errors}</p>
                               </div>
                          )}
-                         <button type="submit" className="btn btn-primary min-h-13 w-full shadow-accent">
-                              Créer le projet
+                         {submitting && (
+                              <span role="status" aria-live="polite" className="muted text-center text-sm">
+                                   {submitPhase === "client" ? "Création du client…" : "Création du projet…"}
+                              </span>
+                         )}
+                         <button
+                              type="submit"
+                              disabled={submitting}
+                              className="btn btn-primary min-h-13 w-full shadow-accent disabled:cursor-wait disabled:opacity-60"
+                         >
+                              {submitting && (
+                                   <svg
+                                        className="size-5 animate-spin"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        aria-hidden="true"
+                                   >
+                                        <circle
+                                             className="opacity-25"
+                                             cx="12"
+                                             cy="12"
+                                             r="9"
+                                             stroke="currentColor"
+                                             strokeWidth="3"
+                                        />
+                                        <path
+                                             className="opacity-75"
+                                             fill="currentColor"
+                                             d="M12 3a9 9 0 0 0-9 9h3a6 6 0 0 1 6-6V3Z"
+                                        />
+                                   </svg>
+                              )}
+                              {submitting
+                                   ? submitPhase === "client"
+                                        ? "Création du client…"
+                                        : "Création du projet…"
+                                   : "Créer le projet"}
                          </button>
-                         <Link href="/projets" className="btn w-full">
+                         <Link
+                              href="/projets"
+                              aria-disabled={submitting}
+                              onClick={(event) => {
+                                   if (submitting) event.preventDefault()
+                              }}
+                              className={`btn w-full ${submitting ? "pointer-events-none opacity-60" : ""}`}
+                         >
                               Annuler
                          </Link>
                     </div>

@@ -1,9 +1,10 @@
 "use client"
 
+import { LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export default function LogoutButton() {
+export default function LogoutButton({ iconOnMobile = false }: { iconOnMobile?: boolean }) {
      const router = useRouter()
      const [pending, setPending] = useState(false)
 
@@ -21,8 +22,22 @@ export default function LogoutButton() {
      }
 
      return (
-          <button type="button" onClick={handleLogout} disabled={pending} className="nav-link muted font-medium">
-               {pending ? "Déconnexion..." : "Se déconnecter"}
+          <button
+               type="button"
+               onClick={handleLogout}
+               disabled={pending}
+               aria-label="Se déconnecter"
+               title={iconOnMobile ? "Se déconnecter" : undefined}
+               className={
+                    iconOnMobile
+                         ? "btn btn-icon shrink-0 sm:btn-sm sm:w-auto sm:px-4"
+                         : "nav-link muted font-medium"
+               }
+          >
+               {iconOnMobile && <LogOut size={20} aria-hidden="true" className="shrink-0" />}
+               <span className={iconOnMobile ? "sr-only sm:not-sr-only" : undefined}>
+                    {pending ? "Déconnexion..." : "Se déconnecter"}
+               </span>
           </button>
      )
 }

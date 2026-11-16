@@ -90,7 +90,7 @@ export default function ClientCard({ client }: { client: ClientCardData }) {
      }
 
      return (
-          <section aria-labelledby="h-fiche" className="card flex flex-col gap-5">
+          <section aria-labelledby="h-fiche" className="card flex min-w-0 flex-col gap-5">
                <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex min-w-0 flex-1 items-center gap-4">
                          <div
@@ -112,11 +112,11 @@ export default function ClientCard({ client }: { client: ClientCardData }) {
                                         className="field font-display text-xl"
                                    />
                               ) : (
-                                   <h2 id="h-fiche" className="section-title">
+                                   <h2 id="h-fiche" className="section-title break-words [overflow-wrap:anywhere]">
                                         {client.client_bus || `${client.client_pren} ${client.client_nom}`}
                                    </h2>
                               )}
-                              <span className="muted text-body-sm">
+                              <span className="muted text-body-sm [overflow-wrap:anywhere]">
                                    Client n°{client.client_id} · depuis le {client.createdAt}
                               </span>
                          </div>
@@ -170,13 +170,18 @@ export default function ClientCard({ client }: { client: ClientCardData }) {
                          ))}
                     </div>
                ) : (
-                    <dl className="m-0 grid gap-x-7 gap-y-4 sm:grid-cols-2">
+                    <dl className="m-0 grid min-w-0 gap-x-7 gap-y-4 sm:grid-cols-2">
                          {fields.map((f) => (
-                              <div key={f.label} className={`flex flex-col gap-1 ${f.wide ? "sm:col-span-2" : ""}`}>
+                              <div
+                                   key={f.label}
+                                   className={`flex min-w-0 flex-col gap-1 ${f.wide ? "sm:col-span-2" : ""}`}
+                              >
                                    <dt className="eyebrow muted">{f.label}</dt>
-                                   <dd className={`m-0 leading-relaxed ${f.strong ? "font-bold" : ""}`}>
+                                   <dd
+                                        className={`m-0 leading-relaxed [overflow-wrap:anywhere] ${f.strong ? "font-bold" : ""}`}
+                                   >
                                         {f.href && f.value ? (
-                                             <a href={f.href} className="link font-normal">
+                                             <a href={f.href} className="link break-all font-normal">
                                                   {f.value}
                                              </a>
                                         ) : (

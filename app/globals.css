@@ -265,6 +265,45 @@
      .seg-todo {
           border-style: dashed;
      }
+     .seg-todo-moving {
+          position: relative;
+     }
+     .seg-todo-moving::after {
+          position: absolute;
+          top: 50%;
+          right: 3px;
+          left: 3px;
+          height: 2px;
+          background-image: repeating-linear-gradient(
+               to right,
+               var(--color-ink) 0 6px,
+               transparent 6px 12px
+          );
+          background-size: 12px 100%;
+          content: "";
+          pointer-events: none;
+          transform: translateY(-50%);
+          animation: seg-dash-move 0.8s linear infinite;
+     }
+     .step-box-waiting-dashes {
+          animation: step-box-dash-move 0.8s linear infinite;
+     }
+     @keyframes seg-dash-move {
+          to {
+               background-position: 6px 0;
+          }
+     }
+     @keyframes step-box-dash-move {
+          to {
+               stroke-dashoffset: -10;
+          }
+     }
+     @media (prefers-reduced-motion: reduce) {
+          .seg-todo-moving::after,
+          .step-box-waiting-dashes {
+               animation: none;
+          }
+     }
 
      .nav-link {
           display: flex;

@@ -93,13 +93,17 @@ export function ClientPageSkeleton() {
      return (
           <LoadingPage label="Chargement de votre espace client">
                <div className="mx-auto flex w-full max-w-300 flex-col gap-6 px-4 py-6 sm:px-6 lg:gap-7 lg:py-8">
-               <header className="flex items-center justify-between gap-4" aria-hidden="true">
-                    <div className="flex min-w-0 flex-col gap-2">
-                         <SkeletonBlock className="h-3 w-44" />
-                         <SkeletonBlock className="h-10 w-64 max-w-full" />
+               <header className="flex flex-wrap items-center justify-between gap-3" aria-hidden="true">
+                    <div className="min-w-0 basis-full flex-1 sm:basis-auto">
+                         <div className="flex min-w-0 flex-col gap-2">
+                              <SkeletonBlock className="h-3 w-44" />
+                              <SkeletonBlock className="h-10 w-64 max-w-full" />
+                         </div>
                     </div>
-                    <SkeletonBlock className="h-12 w-12 shrink-0 border-3 border-ink/10 bg-ink/5 sm:w-36" />
-                    <SkeletonBlock className="hidden h-12 w-12 shrink-0 border-3 border-ink/10 bg-ink/5 sm:block sm:w-36" />
+                    <div className="ml-auto flex items-center gap-2">
+                         <SkeletonBlock className="h-12 w-36 border-3 border-ink/10 bg-ink/5" />
+                         <SkeletonBlock className="size-12 shrink-0 border-3 border-ink/10 bg-ink/5 sm:w-36" />
+                    </div>
                </header>
 
                <section className="card flex flex-col gap-5" aria-hidden="true">
