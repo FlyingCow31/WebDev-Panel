@@ -40,17 +40,19 @@ export async function GetDocumentsClient(proj_id: number) {
      // This checks if the user is authenticated
      // No need to check if the user really have the document because they won't be able to download it due to restrictions in the download document.
      // Plus the check has already been done up there
-     const documents = (await sql`SELECT document_id,
-     proj_id,
-     document_nom,
-     document_type,
-     document_visible_client,
-     document_created_at 
-     FROM document d 
-     JOIN projet p ON p.proj_id = d.proj_id
-     WHERE d.proj_id = ${proj_id} 
-          AND p.client_id = ${user.client_id}
-          AND document_visible_client = true`) as Document[]
+     const documents = (await sql`
+          SELECT d.document_id,
+                 d.proj_id,
+                 d.document_nom,
+                 d.document_type,
+                 d.document_visible_client,
+                 d.document_created_at
+          FROM document d
+          JOIN projet p ON p.proj_id = d.proj_id
+          WHERE d.proj_id = ${proj_id}
+            AND p.client_id = ${user.client_id}
+            AND d.document_visible_client = true
+          ORDER BY d.document_created_at DESC`) as Document[]
 
      return documents
 }
